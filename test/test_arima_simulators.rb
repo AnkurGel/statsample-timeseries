@@ -134,7 +134,7 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
       #test if spike
       assert_operator @acf[2], :>=, 0.1
       assert_operator @acf[3], :<=, 0.2
-      assert_operator @acf[4], :<=, 0.1
+      assert_operator @acf[4], :<=, 0.2
       #visualization:
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/MA%281%29_postive_acf.png
     end
