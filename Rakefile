@@ -17,10 +17,10 @@ Jeweler::Tasks.new do |gem|
   gem.name = "bio-statsample-timeseries"
   gem.homepage = "http://github.com/ankurgel/bioruby-statsample-timeseries"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{TimeSeries modules for Statsample}
+  gem.description = %Q{Statsample-timeseries is an extension to Statsample. It incorporates helpful timeseries functions.}
   gem.email = "ankurgel@gmail.com"
-  gem.authors = ["Ankur Goel"]
+  gem.authors = ["Ankur Goel", "Claudio Bustos"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
