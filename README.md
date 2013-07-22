@@ -1,6 +1,6 @@
 # bio-statsample-timeseries
 
-[![Build Status](https://secure.travis-ci.org/ankurgel/bioruby-statsample-timeseries.png)](http://travis-ci.org/ankurgel/bioruby-statsample-timeseries)
+[![Build Status](https://secure.travis-ci.org/AnkurGel/bioruby-statsample-timeseries.png)](http://travis-ci.org/ankurgel/bioruby-statsample-timeseries)
 
 Full description goes here
 
