@@ -1,4 +1,4 @@
-require(File.expand_path(File.dirname(__FILE__)+'/helpers_tests.rb'))
+require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
 class StatsampleTimeSeriesPacfTestCase < MiniTest::Unit::TestCase
   context(Statsample::TimeSeries) do
     include Statsample::TimeSeries
