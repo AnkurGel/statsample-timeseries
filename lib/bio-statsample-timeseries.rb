@@ -9,4 +9,8 @@
 # In this file only require other files. Avoid other source code.
 
 require 'bio-statsample-timeseries/statsample-timeseries.rb'
+require 'statsample'
+require_relative 'bio-statsample-timeseries/timeseries.rb'
+require_relative 'bio-statsample-timeseries/arima.rb'
+
 
