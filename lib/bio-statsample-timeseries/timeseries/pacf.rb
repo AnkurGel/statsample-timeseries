@@ -8,7 +8,7 @@ module Statsample
           #Inspiration: StatsModels
           pacf = [1.0]
           (1..max_lags).map do |i|
-            pacf << yule_walker(timeseries, i, method)[-1]
+            pacf << yule_walker(timeseries, i, method)[0][-1]
           end
           pacf
         end
@@ -26,6 +26,7 @@ module Statsample
 
           #returns:
           #rho => autoregressive coefficients
+          #sigma => sigma parameter
           ts = ts - ts.mean
           n = ts.size
           if method.downcase.eql? 'yw'
@@ -48,7 +49,11 @@ module Statsample
           r_R = toeplitz(r[0...-1])
 
           mat = Matrix.columns(r_R).inverse()
-          solve_matrix(mat, r[1..r.size])
+          phi = solve_matrix(mat, r[1..r.size])
+          phi_vector = Statsample::Vector.new(phi, :scale)
+          r_vector = Statsample::Vector.new(r[1..r.size], :scale)
+          sigma = r[0] - (r_vector * phi_vector).sum
+          return [phi, sigma]
         end
 
         def self.toeplitz(arr)
