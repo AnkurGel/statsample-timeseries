@@ -57,6 +57,12 @@ module Statsample
        Pacf::Pacf.pacf_yw(self, max_lags, method)
       end
 
+
+      def ar(n = 1500, k = 1)
+        series = Statsample::ARIMA::ARIMA.new
+        series.yule_walker(self, n, k)
+      end
+
       # Lags the series by k periods.
       #
       # The convention is to set the oldest observations (the first ones

@@ -20,12 +20,15 @@ module Statsample
         #or Burg's algorithm(more efficient)
       end
 
-      def yule_walker()
-        #To be implemented
-      end
-
       def create_vector(arr)
         Statsample::Vector.new(arr, :scale)
+      end
+
+      def yule_walker(ts, n, k)
+        #parameters: timeseries, no of observations, order
+        #returns: simulated autoregression with phi parameters and sigma
+        phi, sigma = Pacf::Pacf.yule_walker(ts, k)
+        return ar_sim(n, phi, sigma)
       end
 
       #tentative AR(p) simulator
