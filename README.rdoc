@@ -1,8 +1,8 @@
 = bio-statsample-timeseries
 
 {<img
-src="https://secure.travis-ci.org/ankurgel/bioruby-statsample-timeseries.png"
-/>}[http://travis-ci.org/#!/ankurgel/bioruby-statsample-timeseries]
+src="https://secure.travis-ci.org/AnkurGel/bioruby-statsample-timeseries.png"
+/>}[http://travis-ci.org/#!/AnkurGel/bioruby-statsample-timeseries]
 
 Full description goes here
 
@@ -27,7 +27,7 @@ the source tree.
 
 Information on the source tree, documentation, issues and how to contribute, see
 
-  http://github.com/ankurgel/bioruby-statsample-timeseries
+  http://github.com/AnkurGel/bioruby-statsample-timeseries
 
 The BioRuby community is on IRC server: irc.freenode.org, channel: #bioruby.
 
