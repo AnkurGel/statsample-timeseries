@@ -61,6 +61,23 @@ module Statsample
         x - buffer
       end
 
+      def levinson_durbin(series, nlags = 10, is_time_series = true)
+        #parameters:
+        #series : timeseries, or a series of autocovariances
+        #nlags: largest lag to include in recursion or order of the AR process
+        #is_time_series: boolean. series is timeseries if it is true, else contains autocavariances
+
+        #returns:
+        #sigma_v: estimate of the error variance
+        #arcoefs: AR coefficients
+        #pacf: pacf function
+        #sigma: some function
+
+        if is_time_series
+          #pending
+        end
+      end
+
       #moving average simulator
       def ma_sim(n, theta, sigma)
         #n is number of observations (eg: 1000)

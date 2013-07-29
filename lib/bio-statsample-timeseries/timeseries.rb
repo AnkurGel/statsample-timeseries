@@ -63,6 +63,31 @@ module Statsample
         series.yule_walker(self, n, k)
       end
 
+      def acvf(demean = true)
+        #functionality: computes autocovariance of timeseries data
+        #returns: array of autocovariances
+
+        if demean
+          self = self - self.mean
+        end
+        n = self.size
+        #now to perform cross-correlation on demeaned data
+        #https://en.wikipedia.org/wiki/Cross-correlation
+      end
+
+      def correlate(a, v, mode = 'full')
+        #peforms cross-correlation of two series
+        #multiarray.correlate2(a, v, 'full')
+        if a.size < v.size
+          raise("Should have same size!")
+        end
+        ps = a.size + v.size - 1
+        a_padded = Array.new(ps, 0)
+        a_padded[0...a.size] = a
+
+        out = (mode.downcase.eql? 'full') ? Array.new(ps) : Array.new(a.size)
+        #ongoing
+      end
       # Lags the series by k periods.
       #
       # The convention is to set the oldest observations (the first ones

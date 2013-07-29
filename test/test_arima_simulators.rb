@@ -172,5 +172,16 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
       #visualization: http://jsfiddle.net/7keHK/2/
     end
   end
+
+  context("Yule walker estimations") do
+    include Statsample::ARIMA
+    include Statsample::TimeSeries
+
+    setup do
+      @timeseries = 100.times.map { rand }.to_ts
+      @arma_simulation =->(n) { @timeseries.ar(n, k)}
+    end
+    #to write test
+  end
 end
 
