@@ -78,25 +78,37 @@ module Statsample
         else
           #take autocovariance of series first
         end
-        phi = Array.new((nlags+1), 0.0) { Array.new(nlags+1, 0.0) }
+        #phi = Array.new((nlags+1), 0.0) { Array.new(nlags+1, 0.0) }
+        phi = Matrix.zero(nlags + 1)
         sig = Array.new(nlags+1)
 
         #setting initial point for recursion:
-        phi[1][1] = series[1]/series[0]
-        sig[1] = series[0] - phi[1][1] * series[1]
+        phi[1,1] = series[1]/series[0]
+        #phi[1][1] = series[1]/series[0]
+        sig[1] = series[0] - phi[1, 1] * series[1]
 
         2.upto(order).each do |k|
-          phi[k][k] = (series[k] - (create_vector(phi[1...k][k-1])) * create_vector(series[1...k].reverse)) / sig[k-1]
+          phi[k, k] = (series[k] - (phi[1...k, k-1]) * create_vector(series[1...k].reverse)) / sig[k-1]
           #some serious refinement needed in above for matrix manipulation. Will do today
           1.upto(k-1).each do |j|
-            phi[j][k] = phi[j][k-1] - phi[k][k] * phi[k-j][k-1]
+            phi[j, k] = phi[j, k-1] - phi[k, k] * phi[k-j, k-1]
           end
-          sig[k] = sig[k-1] * (1-phi[k][k] ** 2)
-        end
+          sig[k] = sig[k-1] * (1-phi[k, k] ** 2)
 
+        end
         sigma_v = sig[-1]
-        #arcoefs = phi[]
-        #ongoing
+        arcoefs_delta = phi.column(phi.column_size - 1)
+        arcoefs = arcoefs_delta[1..arcoefs_delta.size]
+        pacf = diag(phi)
+        pacf[0] = 1.0
+        return [sigma_v, arcoefs, pacf, sig, phi]
+
+      end
+
+      def diag(mat)
+        #returns array of diagonal elements of a matrix.
+        #will later abstract it to matrix.rb in Statsample
+        return mat.each_with_index(:diagonal).map { |x, r, c| x }
       end
 
       #moving average simulator
