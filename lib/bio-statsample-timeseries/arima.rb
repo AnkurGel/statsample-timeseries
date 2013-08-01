@@ -74,11 +74,12 @@ module Statsample
         #sigma: some function
 
         if is_time_series
-          series = self
+          series = series
         else
           #take autocovariance of series first
         end
         #phi = Array.new((nlags+1), 0.0) { Array.new(nlags+1, 0.0) }
+        order = nlags
         phi = Matrix.zero(nlags + 1)
         sig = Array.new(nlags+1)
 
@@ -88,7 +89,7 @@ module Statsample
         sig[1] = series[0] - phi[1, 1] * series[1]
 
         2.upto(order).each do |k|
-          phi[k, k] = (series[k] - (phi[1...k, k-1]) * create_vector(series[1...k].reverse)) / sig[k-1]
+          phi[k, k] = (series[k] - (Statsample::Vector.new(phi[1...k, k-1]) * create_vector(series[1...k].reverse)).sum) / sig[k-1]
           #some serious refinement needed in above for matrix manipulation. Will do today
           1.upto(k-1).each do |j|
             phi[j, k] = phi[j, k-1] - phi[k, k] * phi[k-j, k-1]

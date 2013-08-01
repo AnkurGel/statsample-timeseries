@@ -68,9 +68,9 @@ module Statsample
         #returns: array of autocovariances
 
         if demean
-          self = self - self.mean
+          series = self - self.mean
         end
-        n = self.size
+        n = series.size
         #now to perform cross-correlation on demeaned data
         #https://en.wikipedia.org/wiki/Cross-correlation
       end
