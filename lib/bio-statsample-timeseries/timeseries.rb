@@ -68,11 +68,16 @@ module Statsample
         #returns: array of autocovariances
 
         if demean
-          series = self - self.mean
+          demeaned_series = self - self.mean
+        else
+          demeaned_series = self
         end
-        n = series.size
-        #now to perform cross-correlation on demeaned data
-        #https://en.wikipedia.org/wiki/Cross-correlation
+        n = self.acf.size
+        m = self.mean
+
+        0.upto(n - 1).map do |i|
+          (demeaned_series * (self.lag(i) - m)).sum / self.size
+        end
       end
 
       def correlate(a, v, mode = 'full')
