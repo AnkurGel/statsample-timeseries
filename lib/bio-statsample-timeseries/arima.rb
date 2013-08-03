@@ -74,7 +74,7 @@ module Statsample
         #sigma: some function
 
         if is_time_series
-          series = series
+          series = series.mapp(&:to_f)
         else
           #take autocovariance of series first
         end
