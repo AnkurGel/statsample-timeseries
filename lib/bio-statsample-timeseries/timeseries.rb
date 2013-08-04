@@ -47,7 +47,7 @@ module Statsample
         end
       end
 
-      def pacf(method = 'yw', max_lags = nil)
+      def pacf(max_lags = nil, method = 'yw')
         #parameters:
         #max_lags => maximum number of lags for pcf
         #method => for autocovariance in yule_walker:
