@@ -47,14 +47,22 @@ module Statsample
         end
       end
 
-      def pacf(max_lags = nil, method = 'yw')
+      def pacf(method = 'yw', max_lags = nil)
         #parameters:
         #max_lags => maximum number of lags for pcf
         #method => for autocovariance in yule_walker:
           #'yw' for 'yule-walker unbaised', 'mle' for biased maximum likelihood
+          #'ld' for Levinson-Durbin recursion
 
         max_lags ||= (10 * Math.log10(size)).to_i
-       Pacf::Pacf.pacf_yw(self, max_lags, method)
+        if method.downcase.eql? 'yw' or method.downcase.eql? 'mle'
+          Pacf::Pacf.pacf_yw(self, max_lags, method)
+        elsif method.downcase == 'ld'
+          series = self.acvf
+          Pacf::Pacf.levinson_durbin(series, max_lags, true)[2]
+        else
+          raise "Method presents for pacf are 'yw', 'mle' or 'ld'"
+        end
       end
 
 
