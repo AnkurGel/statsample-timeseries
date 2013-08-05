@@ -31,6 +31,15 @@ module Statsample
         return ar_sim(n, phi, sigma)
       end
 
+      def levinson_durbin(ts, n, k)
+        #parameters;
+        #ts: timseries against which to generate phi coefficients
+        #n: number of observations for simulation
+        #k: order of AR
+        intermediate = Pacf::Pacf.levinson_durbin(ts, k)
+        phi, sigma = intermediate[1], intermediate[0]
+        return ar_sim(n, phi, sigma)
+      end
       #tentative AR(p) simulator
       def ar_sim(n, phi, sigma)
         #using random number generator for inclusion of white noise
@@ -59,57 +68,6 @@ module Statsample
           x[i] = summation + err_nor.call()
         end
         x - buffer
-      end
-
-      def levinson_durbin(series, nlags = 10, is_time_series = true)
-        #parameters:
-        #series : timeseries, or a series of autocovariances
-        #nlags: largest lag to include in recursion or order of the AR process
-        #is_time_series: boolean. series is timeseries if it is true, else contains autocavariances
-
-        #returns:
-        #sigma_v: estimate of the error variance
-        #arcoefs: AR coefficients
-        #pacf: pacf function
-        #sigma: some function
-
-        if is_time_series
-          series = series.mapp(&:to_f)
-        else
-          #take autocovariance of series first
-        end
-        #phi = Array.new((nlags+1), 0.0) { Array.new(nlags+1, 0.0) }
-        order = nlags
-        phi = Matrix.zero(nlags + 1)
-        sig = Array.new(nlags+1)
-
-        #setting initial point for recursion:
-        phi[1,1] = series[1]/series[0]
-        #phi[1][1] = series[1]/series[0]
-        sig[1] = series[0] - phi[1, 1] * series[1]
-
-        2.upto(order).each do |k|
-          phi[k, k] = (series[k] - (Statsample::Vector.new(phi[1...k, k-1]) * create_vector(series[1...k].reverse)).sum) / sig[k-1]
-          #some serious refinement needed in above for matrix manipulation. Will do today
-          1.upto(k-1).each do |j|
-            phi[j, k] = phi[j, k-1] - phi[k, k] * phi[k-j, k-1]
-          end
-          sig[k] = sig[k-1] * (1-phi[k, k] ** 2)
-
-        end
-        sigma_v = sig[-1]
-        arcoefs_delta = phi.column(phi.column_size - 1)
-        arcoefs = arcoefs_delta[1..arcoefs_delta.size]
-        pacf = diag(phi)
-        pacf[0] = 1.0
-        return [sigma_v, arcoefs, pacf, sig, phi]
-
-      end
-
-      def diag(mat)
-        #returns array of diagonal elements of a matrix.
-        #will later abstract it to matrix.rb in Statsample
-        return mat.each_with_index(:diagonal).map { |x, r, c| x }
       end
 
       #moving average simulator

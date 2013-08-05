@@ -28,8 +28,7 @@ module Statsample
           if is_acovf
             series = series.map(&:to_f)
           else
-            #series =
-            #take autocovariance of series first
+            series = series.acvf.map(&:to_f)
           end
           #phi = Array.new((nlags+1), 0.0) { Array.new(nlags+1, 0.0) }
           order = nlags
