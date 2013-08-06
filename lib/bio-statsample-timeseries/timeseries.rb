@@ -71,7 +71,8 @@ module Statsample
         series.yule_walker(self, n, k)
       end
 
-      def acvf(demean = true)
+      def acvf(demean = true, unbiased = false)
+        #TODO: change parameters list in opts.merge as suggested by John
         #functionality: computes autocovariance of timeseries data
         #returns: array of autocovariances
 
@@ -82,9 +83,15 @@ module Statsample
         end
         n = self.acf.size
         m = self.mean
+        if unbiased
+          d = Array.new(self.size, self.size)
+        else
+          d = ((1..self.size).to_a.reverse)[0..n]
+        end
+
 
         0.upto(n - 1).map do |i|
-          (demeaned_series * (self.lag(i) - m)).sum / self.size
+          (demeaned_series * (self.lag(i) - m)).sum / d[i]
         end
       end
 
