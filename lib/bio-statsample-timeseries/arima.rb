@@ -140,11 +140,29 @@ module Statsample
       # It's dimensions is r+k x r+k
       #*Parameters*
       #-_r_::integer, r is max(p, q+1), where p and q are orders of AR and MA respectively
-      #-_p_::integer, number of exogeneous variables in ARMA model
-      #-_p_::integer, The AR coefficient of ARMA model
-      #*References*: Statsmodels tsa, Durbin and Koopman Section 4.7
-      def self.T(r, p, k, p)
+      #-_k_::integer, number of exogeneous variables in ARMA model
+      #-_q_::integer, The AR coefficient of ARMA model
 
+      #*References*: Statsmodels tsa, Durbin and Koopman Section 4.7
+      def self.T(r, k, p)
+        arr = Matrix.zero(r)
+        params_padded  = Statsample::Vector.new(Array.new(r, 0), :scale)
+
+        params_padded[0...p] = params[k...(p+k)]
+        intermediate_matrix = (r-1).times.map { Array.new(r, 0) }
+        #appending an array filled with padded values in beginning
+        intermediate_matrix[0,0] = [params_padded]
+
+        #now generating column matrix for that:
+        arr = Matrix.columns(intermediate_matrix)
+        arr_00 = arr[0,0]
+
+        #identify matrix substituition in matrix except row[0] and column[0]
+        r.times do |i|
+          arr[r,r] = 1
+        end
+        arr[0,0] = arr_00
+        arr
       end
     end
   end
