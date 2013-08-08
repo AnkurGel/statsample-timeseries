@@ -132,5 +132,20 @@ module Statsample
         x - buffer
       end
     end
+    class KalmanFilter < Statsample::Vector
+      include Statsample::TimeSeries
+
+      #=T
+      #The coefficient matrix for the state vector in state equation
+      # It's dimensions is r+k x r+k
+      #*Parameters*
+      #-_r_::integer, r is max(p, q+1), where p and q are orders of AR and MA respectively
+      #-_p_::integer, number of exogeneous variables in ARMA model
+      #-_p_::integer, The AR coefficient of ARMA model
+      #*References*: Statsmodels tsa, Durbin and Koopman Section 4.7
+      def self.T(r, p, k, p)
+
+      end
+    end
   end
 end
