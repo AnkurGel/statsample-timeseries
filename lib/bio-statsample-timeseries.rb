@@ -12,5 +12,6 @@ require 'bio-statsample-timeseries/statsample-timeseries.rb'
 require 'statsample'
 require_relative 'bio-statsample-timeseries/timeseries.rb'
 require_relative 'bio-statsample-timeseries/arima.rb'
+require_relative 'bio-statsample-timeseries/utility.rb'
 
 
