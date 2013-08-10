@@ -164,6 +164,21 @@ module Statsample
         arr[0,0] = arr_00
         arr
       end
+
+
+      #=R
+      #The coefficient matrix for the state vector in the observation matrix.
+      #It's dimension is r+k x 1
+      #*Parameters*
+      #-_r_::integer, r is max(p, q+1) where p and q are order of AR and MA respectively
+      #-_k_::integer, number of exogeneous variables in ARMA model
+      #-_q_::integer, The MA order in ARMA model
+      #-_p_::integer, The AR order in ARMA model
+      #*References*: Statsmodels tsa, Durbin and Koopman
+      def self.R(r, k, q, p)
+        arr = Matrix.column_vector(Array.new(r,0.0))
+
+      end
     end
   end
 end
