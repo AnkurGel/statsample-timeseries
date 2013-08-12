@@ -131,6 +131,13 @@ module Statsample
         end
         x - buffer
       end
+
+      #=Hannan-Rissanen for ARMA fit
+      def self.hannan(ts, p, q, k)
+        start_params = create_vector(Array.new(p+q+k, 0))
+        ts_dup = ts.dup
+
+      end
     end
     class KalmanFilter < Statsample::Vector
       include Statsample::TimeSeries
@@ -177,7 +184,18 @@ module Statsample
       #*References*: Statsmodels tsa, Durbin and Koopman
       def self.R(r, k, q, p)
         arr = Matrix.column_vector(Array.new(r,0.0))
+        #pending - in kind of difficult end here;
+      end
 
+      #=Z
+      #The Z selector matrix
+      #*Parameters*
+      #-_r_::integer, max(p, q+1)
+      #Returns: vector
+      def self.Z(r)
+        arr = Statsample::Vector.new(Array.new(r, 0.0), :scale)
+        arr[0] = 1.0
+        return arr
       end
     end
   end
