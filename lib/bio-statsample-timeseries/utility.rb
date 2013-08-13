@@ -32,6 +32,20 @@ module Statsample
       end
     end
 
+    #=Checks if given matrix is symmetric or not
+    #---
+    #returns bool
+    #`symmetric?` is present in Ruby Matrix 1.9.3+, but not in 1.8.*
+    def is_symmetric?
+      return false unless square?
+
+      (0...row_size).each do |i|
+        0.upto(i).each do |j|
+          return false if self[i, j] != self[j, i]
+        end
+      end
+      true
+    end
 
     #To abstract out diagonal elements code I wrote in pacf earlier.
   end
