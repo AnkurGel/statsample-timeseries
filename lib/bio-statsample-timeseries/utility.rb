@@ -23,7 +23,7 @@ module Statsample
   class ::Matrix
     #=Squares f sum
     #---
-    #Does squares of sum in column order. 
+    #Does squares of sum in column order.
     #Necessary for computations in various processes
     def squares_of_sum
       no_columns = self.column_size
@@ -46,6 +46,38 @@ module Statsample
       end
       true
     end
+
+    #=Cholesky decomposition
+    #Reference: http://en.wikipedia.org/wiki/Cholesky_decomposition
+    #---
+    #==Description
+    #Cholesky decomposition is reprsented by `M = L X L*`, where
+    #M is the symmetric matrix and `L` is the lower half of cholesky matrix,
+    #and `L*` is the conjugate form of `L`.
+    #*Returns* : Cholesky decomposition for a given matrix(if symmetric)
+    #*Utility*: Essential matrix function, requisite in kalman filter, least squares
+    def cholesky
+      if is_symmetric?
+        c = Matrix.zero(row_size)
+        0.upto(row_size - 1).each do |k|
+          0.upto(row_size - 1).each do |i|
+            if i == k
+              sum = (0..(k-1)).inject(0.0){ |sum, j| sum + c[k, j] ** 2 }
+              value = Math.sqrt(self[k,k] - sum)
+              c[k, k] = value
+            elsif i > k
+              sum = (0..(k-1)).inject(0.0){ |sum, j| sum + c[i, j] * c[k, j] }
+              value = (self[k,i] - sum) / c[k, k]
+              c[i, k] = value
+            end
+          end
+        end
+      else
+        raise ArgumentError, "Given matrix should be symmetric."
+      end
+      c
+    end
+
 
     #To abstract out diagonal elements code I wrote in pacf earlier.
   end
