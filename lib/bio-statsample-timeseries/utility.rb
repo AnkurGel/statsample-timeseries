@@ -21,7 +21,7 @@ module Statsample
 
 
   class ::Matrix
-    #=Squares f sum
+    #=Squares of sum
     #---
     #Does squares of sum in column order.
     #Necessary for computations in various processes

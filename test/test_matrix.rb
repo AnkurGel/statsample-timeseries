@@ -55,6 +55,14 @@ class StatsampleMatrixTestCase < MiniTest::Unit::TestCase
   #TESTS for matrix squares of sum - Matrix#squares_of_sum
   context("Squares of sum") do
 
+    should "return array of size 4 for matrix - #{@mat_non_symmetric}" do
+      #equal to column size
+      assert_equal @mat_non_symmetric.squares_of_sum.size, 4
+    end
+
+    should "return [784, 1024, 1296, 1600] for matrix - #{@mat_non_symmetric}" do
+      assert_equal @mat_non_symmetric.squares_of_sum, [784, 1024, 1296, 1600]
+    end
   end
 
 end
