@@ -78,7 +78,22 @@ module Statsample
       c
     end
 
-
-    #To abstract out diagonal elements code I wrote in pacf earlier.
+    #=Chain Product
+    #Class method
+    #Returns the chain product of two matrices
+    #==Usage:
+    #Let `a` be 4 * 3 matrix, 
+    #Let `b` be 3 * 3 matrix, 
+    #Let `c` be 3 * 1 matrix,
+    #then `Matrix.chain_dot(a, b, c)`
+    #===*NOTE*: Send the matrices in multiplicative order with proper dimensions
+    def self.chain_dot(*args)
+      #inspired by Statsmodels
+      begin
+        args.reduce { |x, y| x * y } #perform matrix multiplication in order
+      rescue ExceptionForMatrix::ErrDimensionMismatch
+        puts "ExceptionForMatrix: Please provide matrices with proper multiplicative dimensions"
+      end
+    end
   end
 end
