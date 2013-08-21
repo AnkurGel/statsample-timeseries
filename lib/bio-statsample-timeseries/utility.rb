@@ -12,7 +12,7 @@ module Statsample
     def squares_of_sum(demean = false)
       if demean
         m = self.mean
-        self.map { |x| (x-m)}.sum ** 2
+        self.map { |x| (x-m) }.sum ** 2
       else
         return self.sum.to_f ** 2
       end
@@ -95,5 +95,21 @@ module Statsample
         puts "ExceptionForMatrix: Please provide matrices with proper multiplicative dimensions"
       end
     end
+  end
+
+  #=Adds a column of constants.
+  #Appends a column of ones to the matrix/array if first argument is false
+  #If an n-array, first checks if one column of ones is already present
+  #if present, then original(self) is returned, else, prepends with a vector of ones
+  def add_constant(prepend = true)
+    #for Matrix
+    (0...column_size).each do |i|
+      if Statsample::Vector.new(Matrix.column(i), :scale) == Statsample::Vector.new(Array.new(row_size, 1), :scale)
+        #a column with constant is already present
+        return self
+      end
+    end
+    #prepend/append a column with ones
+    
   end
 end
