@@ -26,8 +26,7 @@ module Statsample
     #Does squares of sum in column order.
     #Necessary for computations in various processes
     def squares_of_sum
-      no_columns = self.column_size
-      (0...no_columns).map do |j|
+      (0...column_size).map do |j|
         self.column(j).sum ** 2
       end
     end
