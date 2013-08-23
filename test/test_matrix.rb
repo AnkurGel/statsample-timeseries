@@ -14,21 +14,21 @@ class StatsampleMatrixTestCase < MiniTest::Unit::TestCase
     @mat_non_square = Matrix.rows(@arr_non_square.each_slice(3).to_a)
   end
 
-  #TESTS for matrix symmetricity - Matrix#is_symmetric?
-  context("is_symmetric?") do
+  #TESTS for matrix symmetricity - Matrix#symmetric?
+  context("symmetric?") do
 
     should "return false for non-symmetric matrix" do
-      assert_equal @mat_non_symmetric.is_symmetric?, false
+      assert_equal @mat_non_symmetric.symmetric?, false
     end
 
     should "return false for non-square matrix" do
-      assert_equal @mat_non_square.is_symmetric?, false
+      assert_equal @mat_non_square.symmetric?, false
     end
 
     should "return true for symmetrix matrix" do
       arr = %w[4 12 -16 12 37 -43 -16 -43 93].map(&:to_i)
       mat = setup_square_matrix(arr, 3)
-      assert_equal mat.is_symmetric?, true
+      assert_equal mat.symmetric?, true
     end
   end
 
