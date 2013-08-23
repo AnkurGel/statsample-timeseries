@@ -35,7 +35,7 @@ module Statsample
     #---
     #returns bool
     #`symmetric?` is present in Ruby Matrix 1.9.3+, but not in 1.8.*
-    def is_symmetric?
+    def symmetric?
       return false unless square?
 
       (0...row_size).each do |i|
@@ -56,23 +56,20 @@ module Statsample
     #*Returns* : Cholesky decomposition for a given matrix(if symmetric)
     #*Utility*: Essential matrix function, requisite in kalman filter, least squares
     def cholesky
-      if is_symmetric?
-        c = Matrix.zero(row_size)
-        0.upto(row_size - 1).each do |k|
-          0.upto(row_size - 1).each do |i|
-            if i == k
-              sum = (0..(k-1)).inject(0.0){ |sum, j| sum + c[k, j] ** 2 }
-              value = Math.sqrt(self[k,k] - sum)
-              c[k, k] = value
-            elsif i > k
-              sum = (0..(k-1)).inject(0.0){ |sum, j| sum + c[i, j] * c[k, j] }
-              value = (self[k,i] - sum) / c[k, k]
-              c[i, k] = value
-            end
+      raise ArgumentError, "Given matrix should be symmetric" unless symmetric?
+      c = Matrix.zero(row_size)
+      0.upto(row_size - 1).each do |k|
+        0.upto(row_size - 1).each do |i|
+          if i == k
+            sum = (0..(k-1)).inject(0.0){ |sum, j| sum + c[k, j] ** 2 }
+            value = Math.sqrt(self[k,k] - sum)
+            c[k, k] = value
+          elsif i > k
+            sum = (0..(k-1)).inject(0.0){ |sum, j| sum + c[i, j] * c[k, j] }
+            value = (self[k,i] - sum) / c[k, k]
+            c[i, k] = value
           end
         end
-      else
-        raise ArgumentError, "Given matrix should be symmetric."
       end
       c
     end
