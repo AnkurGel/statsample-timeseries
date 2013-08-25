@@ -91,21 +91,28 @@ module Statsample
         puts "ExceptionForMatrix: Please provide matrices with proper multiplicative dimensions"
       end
     end
-  end
 
-  #=Adds a column of constants.
-  #Appends a column of ones to the matrix/array if first argument is false
-  #If an n-array, first checks if one column of ones is already present
-  #if present, then original(self) is returned, else, prepends with a vector of ones
-  def add_constant(prepend = true)
-    #for Matrix
-    (0...column_size).each do |i|
-      if Statsample::Vector.new(Matrix.column(i), :scale) == Statsample::Vector.new(Array.new(row_size, 1), :scale)
-        #a column with constant is already present
-        return self
+
+    #=Adds a column of constants.
+    #Appends a column of ones to the matrix/array if first argument is false
+    #If an n-array, first checks if one column of ones is already present
+    #if present, then original(self) is returned, else, prepends with a vector of ones
+    def add_constant(prepend = true)
+      #for Matrix
+      (0...column_size).each do |i|
+        if self.column(i).map(&:to_f) == Object::Vector.elements(Array.new(row_size, 1.0))
+          return self
+        end
       end
+      #append/prepend a column of one's
+      vectors = (0...row_size).map do |r|
+        if prepend
+          [1.0].concat(self.row(r).to_a)
+        else
+          self.row(r).to_a.push(1.0)
+        end
+      end
+      return Matrix.rows(vectors)
     end
-    #prepend/append a column with ones
-    
   end
 end
