@@ -65,4 +65,28 @@ class StatsampleMatrixTestCase < MiniTest::Unit::TestCase
     end
   end
 
+  #TESTS for adding constants to matrix
+  context("Add constant") do
+
+    should "prepend all rows with ones" do
+      mat = @mat_non_symmetric.add_constant
+      assert_equal @mat_non_symmetric.column_size, 4
+      assert_equal mat.column_size, 5
+      assert_equal mat.column(0).to_a, [1.0, 1.0,1.0,1.0]
+    end
+
+    should "append all rows with ones if prepend = false" do
+      mat = @mat_non_symmetric.add_constant(false)
+      assert_equal @mat_non_symmetric.column_size, 4
+      assert_equal mat.column_size, 5
+      assert_equal mat.column(mat.column_size - 1).to_a, [1.0, 1.0,1.0,1.0]
+    end
+
+    should "not append/prepend if a column of ones already exists in matrix" do
+      matrix = Matrix[[1, 2, 1, 4], [5, 6, 1, 8], [9, 10, 1, 12]]  
+      const_mat = matrix.add_constant
+      assert_equal matrix.column_size, const_mat.column_size
+      assert_equal matrix.row_size, const_mat.row_size
+    end
+  end
 end
