@@ -71,6 +71,12 @@ module Statsample
         series.yule_walker(self, n, k)
       end
 
+      #=AutoCovariance 
+      #Provides autocovariance of timeseries.
+      #-Parameters:
+      #demean = true; optional. Supply false if series is not to be demeaned
+      #unbiased = true; optional. true/false for unbiased/biased form of autocovariance
+      #-Returns-: Autocovariance value
       def acvf(demean = true, unbiased = true)
         #TODO: change parameters list in opts.merge as suggested by John
         #functionality: computes autocovariance of timeseries data
