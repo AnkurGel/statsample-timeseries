@@ -47,6 +47,15 @@ module Statsample
         end
       end
 
+      #=Partial Autocorrelation
+      #Generates partial autocorrelation series for a timeseries
+      #*Parameters*: 
+      #-_max_lags_::integer, optional - provide number of lags
+      #-_method_::string. Default: 'yw'. 
+      #    * _yw_:: For yule-walker algorithm unbiased approach
+      #    * _mle_:: For Maximum likelihood algorithm approach
+      #    * _ld_:: Forr Levinson-Durbin recursive approach
+      #Returns - array of pacf 
       def pacf(max_lags = nil, method = 'yw')
         #parameters:
         #max_lags => maximum number of lags for pcf
