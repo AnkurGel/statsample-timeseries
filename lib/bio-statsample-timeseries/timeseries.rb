@@ -3,7 +3,7 @@ module Statsample::TimeSeriesShorthands
   # Creates a new Statsample::TimeSeries object
   # Argument should be equal to TimeSeries.new
   def to_time_series(*args)
-    Statsample::TimeSeries::TimeSeries.new(self, :scale, *args)
+    Statsample::TimeSeries::Series.new(self, :scale, *args)
   end
 
   alias :to_ts :to_time_series
@@ -17,9 +17,7 @@ module Statsample
   module TimeSeries
     # Collection of data indexed by time.
     # The order goes from earliest to latest.
-    # ISSUE: You could rename TimeSeries to Series, because
-    #        the namespace implies the use.
-    class TimeSeries < Statsample::Vector
+    class Series < Statsample::Vector
       include Statsample::TimeSeries::Pacf
       # Calculates the autocorrelation coefficients of the series.
       #
@@ -33,8 +31,7 @@ module Statsample
       #  ts.acf   # => array with first 21 autocorrelations
       #  ts.acf 3 # => array with first 3 autocorrelations
       #
-      # ISSUE: Parentheses on parameteres
-      def acf max_lags = nil
+      def acf(max_lags = nil)
         max_lags ||= (10 * Math.log10(size)).to_i
 
         (0..max_lags).map do |i|
@@ -52,26 +49,26 @@ module Statsample
 
       #=Partial Autocorrelation
       #Generates partial autocorrelation series for a timeseries
-      #*Parameters*: 
+      #*Parameters*:
       #-_max_lags_::integer, optional - provide number of lags
-      #-_method_::string. Default: 'yw'. 
+      #-_method_::string. Default: 'yw'.
       #    * _yw_:: For yule-walker algorithm unbiased approach
       #    * _mle_:: For Maximum likelihood algorithm approach
       #    * _ld_:: Forr Levinson-Durbin recursive approach
-      #Returns - array of pacf 
-	  # ISSUES: - Use a symbol, not string, to select the method
-
-      def pacf(max_lags = nil, method = 'yw')
+      #Returns - array of pacf
+      #
+      def pacf(max_lags = nil, method = :yw)
         #parameters:
         #max_lags => maximum number of lags for pcf
         #method => for autocovariance in yule_walker:
           #'yw' for 'yule-walker unbaised', 'mle' for biased maximum likelihood
           #'ld' for Levinson-Durbin recursion
 
+        method = method.downcase.to_sym
         max_lags ||= (10 * Math.log10(size)).to_i
-        if method.downcase.eql? 'yw' or method.downcase.eql? 'mle'
-          Pacf::Pacf.pacf_yw(self, max_lags, method)
-        elsif method.downcase == 'ld'
+        if method.eql? :yw or method.eql? :mle
+          Pacf::Pacf.pacf_yw(self, max_lags, method.to_s)
+        elsif method == :ld
           series = self.acvf
           Pacf::Pacf.levinson_durbin(series, max_lags, true)[2]
         else
@@ -79,19 +76,26 @@ module Statsample
         end
       end
 	
-      # ISSUE: Document this, please....
-      
+      #=Autoregressive estimation
+      #Generates AR(k) series for the calling timeseries by yule walker.
+      #*Parameters*:
+      #-_n_::integer, (default = 1500) number of observations for AR.
+      #-_k_::integer, (default = 1) order of AR process.
+      #*Returns*:
+      #Array constituting estimated AR series.
+      #
       def ar(n = 1500, k = 1)
         series = Statsample::ARIMA::ARIMA.new
         series.yule_walker(self, n, k)
       end
 
-      #=AutoCovariance 
+      #=AutoCovariance
       #Provides autocovariance of timeseries.
       #-Parameters:
       #demean = true; optional. Supply false if series is not to be demeaned
       #unbiased = true; optional. true/false for unbiased/biased form of autocovariance
       #-Returns-: Autocovariance value
+      #
       def acvf(demean = true, unbiased = true)
         #TODO: change parameters list in opts.merge as suggested by John
         #functionality: computes autocovariance of timeseries data
@@ -115,7 +119,10 @@ module Statsample
           (demeaned_series * (self.lag(i) - m)).sum / d[i]
         end
       end
-	  # ISSUE: Document this (pars and return values)
+
+      #=Correlation
+      #Gives correlation of timeseries.
+      #
       def correlate(a, v, mode = 'full')
         #peforms cross-correlation of two series
         #multiarray.correlate2(a, v, 'full')
@@ -129,7 +136,7 @@ module Statsample
         out = (mode.downcase.eql? 'full') ? Array.new(ps) : Array.new(a.size)
         #ongoing
       end
-      
+
       # Lags the series by k periods.
       #
       # The convention is to set the oldest observations (the first ones
@@ -144,8 +151,7 @@ module Statsample
       #  ts.lag   # => [nil, 0.69, 0.23, 0.44, ...]
       #  ts.lag 2 # => [nil, nil, 0.69, 0.23, ...]
       #
-      # ISSUE: Parentheses on parameters
-      def lag k = 1
+      def lag(k = 1)
         return self if k == 0
 
         dup.tap do |lagged|
@@ -160,38 +166,41 @@ module Statsample
         end
       end
 
+      #=Diff
       # Performs a first difference of the series.
       #
       # The convention is to set the oldest observations (the first ones
       # in the series) to nil so that the size of the diffed series is the
       # same as the original.
       #
-      # Usage:
+      #*Usage*:
       #
       #  ts = (1..10).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       #
       #  ts.diff   # => [nil, -0.46, 0.21, 0.27, ...]
       #
-      # ISSUE: Document parameters and return value.
       def diff
         self - self.lag
       end
 
-      # Calculates a moving average of the series using the provided
+      #=Moving Average
+      # Calculates the moving average of the series using the provided
       # lookback argument. The lookback defaults to 10 periods.
+      #*Parameters*:
+      #-_n_::integer, (default = 10) - loopback argument
       #
-      # Usage:
+      #*Usage*:
       #
       #   ts = (1..100).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       #
       #   # first 9 observations are nil
       #   ts.ma    # => [ ... nil, 0.484... , 0.445... , 0.513 ... , ... ]
-	  # ISSUE: - Document parameters and return value.
-	  #        - Parentheses on parameters
-
-      def ma n = 10
+      #
+      #*Returns*:
+      #Resulting moving average timeseries object
+      def ma(n = 10)
         return mean if n >= size
 
         ([nil] * (n - 1) + (0..(size - n)).map do |i|
@@ -199,6 +208,7 @@ module Statsample
         end).to_time_series
       end
 
+      #=Exponential Moving Average
       # Calculates an exponential moving average of the series using a
       # specified parameter. If wilder is false (the default) then the EMA
       # uses a smoothing value of 2 / (n + 1), if it is true then it uses the
@@ -208,17 +218,22 @@ module Statsample
       # use a lot more than n observations to calculate. The series is stable
       # if the size of the series is >= 3.45 * (n + 1)
       #
-      # Usage: 
+      #*Parameters*:
+      #-_n_::integer, (default = 10)
+      #-_wilder_::boolean, (default = false), if true, 1/n value is used for smoothing;
+      #if false, uses 2/(n+1) value
+      #
+      #*Usage*:
       #
       #   ts = (1..100).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       #
       #   # first 9 observations are nil
       #   ts.ema   # => [ ... nil, 0.509... , 0.433..., ... ]
-	  # ISSUE: - Document parameters and return value.
-	  #        - Parentheses on parameters
-      
-      def ema n = 10, wilder = false
+      #
+      #*Returns*:
+      #EMA timeseries
+      def ema(n = 10, wilder = false)
         smoother = wilder ? 1.0 / n : 2.0 / (n + 1)
 
         # need to start everything from the first non-nil observation
@@ -237,12 +252,24 @@ module Statsample
         base.to_time_series
       end
 
+      #=Moving Average Convergence-Divergence
       # Calculates the MACD (moving average convergence-divergence) of the time
       # series - this is a comparison of a fast EMA with a slow EMA.
-	  # ISSUE: - Document parameters and return value.
-	  #        - Parentheses on parameters
-      
-      def macd fast = 12, slow = 26, signal = 9
+      #
+      # *Parameters*:
+      # -_fast_::integer, (default = 12) - fast component of MACD
+      # -_slow_::integer, (default = 26) - slow component of MACD
+      # -_signal_::integer, (default = 9) - signal component of MACD
+      #
+      # *Usage*:
+      # ts = (1..100).map { rand }.to_ts
+      #            # => [0.69, 0.23, 0.44, 0.71, ...]
+      # ts.macd(13)
+      #
+      # *Returns*:
+      # Array of two timeseries - comparison of fast EMA with slow
+      # and EMA with signal value
+      def macd(fast = 12, slow = 26, signal = 9)
         series = ema(fast) - ema(slow)
         [series, series.ema(signal)]
       end

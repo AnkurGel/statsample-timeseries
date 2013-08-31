@@ -7,7 +7,7 @@ class StatsampleTestTimeSeries < MiniTest::Unit::TestCase
 
   def setup
     # daily closes of iShares XIU on the TSX
-    @xiu = Statsample::TimeSeries::TimeSeries.new [17.28, 17.45, 17.84, 17.74, 17.82, 17.85, 17.36, 17.3, 17.56, 17.49, 17.46, 17.4, 17.03, 17.01,
+    @xiu = Statsample::TimeSeries::Series.new [17.28, 17.45, 17.84, 17.74, 17.82, 17.85, 17.36, 17.3, 17.56, 17.49, 17.46, 17.4, 17.03, 17.01,
       16.86, 16.86, 16.56, 16.36, 16.66, 16.77], :scale
   end
 
