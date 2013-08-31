@@ -11,10 +11,10 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
     ts.pacf
   end
   context("AR(1) simulations") do
-    include Statsample::ARIMA
+    include Statsample
 
     setup do
-      @series = ARIMA.new
+      @series = TimeSeries.arima
       @ar_1_positive = @series.ar_sim(1500, [0.9], 2)
       @ar_1_negative = @series.ar_sim(1500, [-0.9], 2)
 
@@ -73,10 +73,10 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
   end
 
   context("AR(p) simulations") do
-    include Statsample::ARIMA
+    include Statsample
 
     setup do
-      @series = ARIMA.new
+      @series = TimeSeries.arima
       @ar_p_positive = @series.ar_sim(1500, [0.3, 0.5], 2)
       @ar_p_negative = @series.ar_sim(1500, [-0.3, -0.5], 2)
     end
@@ -120,9 +120,9 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
 
 
   context("MA(1) simulations") do
-    include Statsample::ARIMA
+    include Statsample
     setup do
-      @series = ARIMA.new
+      @series = TimeSeries.arima
       @ma_positive = @series.ar_sim(1500, [0.5], 2)
       @ma_negative = @series.ar_sim(1500, [-0.5], 2)
     end
@@ -153,9 +153,9 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
   end
 
   context("MA(q) simulations") do
-    include Statsample::ARIMA
+    include Statsample
     setup do
-      @series = ARIMA.new
+      @series = TimeSeries.arima
       @ma_positive = @series.ar_sim(1500, [0.5, 0.3, 0.2], 2)
       @ma_negative = @series.ar_sim(1500, [-0.5], 2)
     end
@@ -174,8 +174,7 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
   end
 
   context("Yule walker estimations") do
-    include Statsample::ARIMA
-    include Statsample::TimeSeries
+    include Statsample
 
     setup do
       @timeseries = 100.times.map { rand }.to_ts

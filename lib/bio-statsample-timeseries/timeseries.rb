@@ -85,7 +85,8 @@ module Statsample
       #Array constituting estimated AR series.
       #
       def ar(n = 1500, k = 1)
-        series = Statsample::ARIMA::ARIMA.new
+        series = Statsample::TimeSeries.arima
+        #series = Statsample::TimeSeries::ARIMA.new
         series.yule_walker(self, n, k)
       end
 
