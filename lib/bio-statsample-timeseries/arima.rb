@@ -1,15 +1,24 @@
 #require 'debugger'
 module Statsample
+  # ISSUE: Should be include on module TimeSeries
   module ARIMA
+	# ISSUE: Don't create an inner class of same name
     class ARIMA < Statsample::Vector
       include Statsample::TimeSeries
-
+	  # SUGGESTION: We could use an API similar to R
+	  #             like 
+	  #             ar_obj=Statsample::TimeSeries.arima(ds,p,i,q)
+	  # 			which calls
+	  # 			Statsample::TimeSeries::Arima.new(ds,p,i,q)
       def arima(ds, p, i, q)
         #prototype
+        # ISSUE: We should differenciate now, if i>0.
+        #	     The result should be send to next step
         if q.zero?
           self.ar(p)
         elsif p.zero?
           self.ma(p)
+        # ISSUE-> ELSE -> simultaneuos estimation of MA and AR parameters
         end
       end
 
@@ -23,13 +32,16 @@ module Statsample
       def create_vector(arr)
         Statsample::Vector.new(arr, :scale)
       end
-
+	  # ISSUE: This should return the parameters (phi and sigma) for 
+	  # the AR(k) series, not the simulation
       def yule_walker(ts, n, k)
         #parameters: timeseries, no of observations, order
         #returns: simulated autoregression with phi parameters and sigma
         phi, sigma = Pacf::Pacf.yule_walker(ts, k)
         return ar_sim(n, phi, sigma)
       end
+	  # ISSUE: This should return the parameters (phi and sigma) for 
+	  # the AR(k) series, not the simulation
 
       def levinson_durbin(ts, n, k)
         #parameters;
@@ -41,6 +53,7 @@ module Statsample
         return ar_sim(n, phi, sigma)
       end
       #tentative AR(p) simulator
+      # ISSUE: Document this...
       def ar_sim(n, phi, sigma)
         #using random number generator for inclusion of white noise
         err_nor = Distribution::Normal.rng(0, sigma)
@@ -139,6 +152,8 @@ module Statsample
 
       end
     end
+    # ISSUE: This should be included as a module on 
+    #        Statsample::TimeSeries::Arima::KalmanFilter
     class KalmanFilter < Statsample::Vector
       include Statsample::TimeSeries
 
@@ -184,6 +199,7 @@ module Statsample
       #*References*: Statsmodels tsa, Durbin and Koopman
       def self.R(r, k, q, p)
         arr = Matrix.column_vector(Array.new(r,0.0))
+        
         #pending - in kind of difficult end here;
       end
 

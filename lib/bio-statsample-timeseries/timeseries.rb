@@ -17,6 +17,8 @@ module Statsample
   module TimeSeries
     # Collection of data indexed by time.
     # The order goes from earliest to latest.
+    # ISSUE: You could rename TimeSeries to Series, because
+    #        the namespace implies the use.
     class TimeSeries < Statsample::Vector
       include Statsample::TimeSeries::Pacf
       # Calculates the autocorrelation coefficients of the series.
@@ -31,6 +33,7 @@ module Statsample
       #  ts.acf   # => array with first 21 autocorrelations
       #  ts.acf 3 # => array with first 3 autocorrelations
       #
+      # ISSUE: Parentheses on parameteres
       def acf max_lags = nil
         max_lags ||= (10 * Math.log10(size)).to_i
 
@@ -56,6 +59,8 @@ module Statsample
       #    * _mle_:: For Maximum likelihood algorithm approach
       #    * _ld_:: Forr Levinson-Durbin recursive approach
       #Returns - array of pacf 
+	  # ISSUES: - Use a symbol, not string, to select the method
+
       def pacf(max_lags = nil, method = 'yw')
         #parameters:
         #max_lags => maximum number of lags for pcf
@@ -73,8 +78,9 @@ module Statsample
           raise "Method presents for pacf are 'yw', 'mle' or 'ld'"
         end
       end
-
-
+	
+      # ISSUE: Document this, please....
+      
       def ar(n = 1500, k = 1)
         series = Statsample::ARIMA::ARIMA.new
         series.yule_walker(self, n, k)
@@ -109,7 +115,7 @@ module Statsample
           (demeaned_series * (self.lag(i) - m)).sum / d[i]
         end
       end
-
+	  # ISSUE: Document this (pars and return values)
       def correlate(a, v, mode = 'full')
         #peforms cross-correlation of two series
         #multiarray.correlate2(a, v, 'full')
@@ -123,6 +129,7 @@ module Statsample
         out = (mode.downcase.eql? 'full') ? Array.new(ps) : Array.new(a.size)
         #ongoing
       end
+      
       # Lags the series by k periods.
       #
       # The convention is to set the oldest observations (the first ones
@@ -137,6 +144,7 @@ module Statsample
       #  ts.lag   # => [nil, 0.69, 0.23, 0.44, ...]
       #  ts.lag 2 # => [nil, nil, 0.69, 0.23, ...]
       #
+      # ISSUE: Parentheses on parameters
       def lag k = 1
         return self if k == 0
 
@@ -165,6 +173,7 @@ module Statsample
       #
       #  ts.diff   # => [nil, -0.46, 0.21, 0.27, ...]
       #
+      # ISSUE: Document parameters and return value.
       def diff
         self - self.lag
       end
@@ -179,6 +188,9 @@ module Statsample
       #
       #   # first 9 observations are nil
       #   ts.ma    # => [ ... nil, 0.484... , 0.445... , 0.513 ... , ... ]
+	  # ISSUE: - Document parameters and return value.
+	  #        - Parentheses on parameters
+
       def ma n = 10
         return mean if n >= size
 
@@ -203,6 +215,9 @@ module Statsample
       #
       #   # first 9 observations are nil
       #   ts.ema   # => [ ... nil, 0.509... , 0.433..., ... ]
+	  # ISSUE: - Document parameters and return value.
+	  #        - Parentheses on parameters
+      
       def ema n = 10, wilder = false
         smoother = wilder ? 1.0 / n : 2.0 / (n + 1)
 
@@ -224,6 +239,9 @@ module Statsample
 
       # Calculates the MACD (moving average convergence-divergence) of the time
       # series - this is a comparison of a fast EMA with a slow EMA.
+	  # ISSUE: - Document parameters and return value.
+	  #        - Parentheses on parameters
+      
       def macd fast = 12, slow = 26, signal = 9
         series = ema(fast) - ema(slow)
         [series, series.ema(signal)]
