@@ -13,17 +13,19 @@ module Statsample
           pacf
         end
 
-        def self.levinson_durbin(series, nlags = 10, is_acovf = false)
-          #parameters:
-          #series : timeseries, or a series of autocovariances
-          #nlags: largest lag to include in recursion or order of the AR process
-          #is_time_series: boolean. series is timeseries if it is true, else contains autocavariances
 
-          #returns:
-          #sigma_v: estimate of the error variance
-          #arcoefs: AR coefficients
-          #pacf: pacf function
-          #sigma: some function
+        #=Levinson-Durbin Algorithm
+        #*Parameters*:
+        #-_series_ : timeseries, or a series of autocovariances
+        #-_nlags_: integer(default: 10): largest lag to include in recursion or order of the AR process
+        #-_is_acovf_: boolean(default: false): series is timeseries if it is false, else contains autocavariances
+
+        #*returns*:
+        #-_sigma_v_: estimate of the error variance
+        #-_arcoefs_: AR coefficients
+        #-_pacf_: pacf function
+        #-_sigma_: some function
+        def self.levinson_durbin(series, nlags = 10, is_acovf = false)
 
           if is_acovf
             series = series.map(&:to_f)
@@ -65,20 +67,20 @@ module Statsample
         end
 
 
+        #=Yule Walker Algorithm
+        #From the series, estimates AR(p)(autoregressive) parameter
+        #using Yule-Waler equation. See -
+        #http://en.wikipedia.org/wiki/Autoregressive_moving_average_model
+
+        #*Parameters*:
+        #-_ts_::timeseries
+        #-_k_::order, default = 1
+        #-_method_:: can be 'yw' or 'mle'. If 'yw' then it is unbiased, denominator is (n - k)
+
+        #*returns*:
+        #-_rho_:: autoregressive coefficients
+        #-_sigma_:: sigma parameter
         def self.yule_walker(ts, k = 1, method='yw')
-          #From the series, estimates AR(p)(autoregressive) parameter
-          #using Yule-Waler equation. See -
-          #http://en.wikipedia.org/wiki/Autoregressive_moving_average_model
-
-          #parameters:
-          #ts = series
-          #k = order, default = 1
-          #method = can be 'yw' or 'mle'. If 'yw' then it is unbiased, denominator
-          #is (n - k)
-
-          #returns:
-          #rho => autoregressive coefficients
-          #sigma => sigma parameter
           ts = ts - ts.mean
           n = ts.size
           if method.downcase.eql? 'yw'
