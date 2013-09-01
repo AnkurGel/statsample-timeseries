@@ -1,6 +1,5 @@
 #require 'debugger'
 module Statsample
-  # ISSUE: Should be include on module TimeSeries
   module TimeSeries
 
     def self.arima
@@ -41,16 +40,13 @@ module Statsample
       end
 
 
-      # ISSUE: This should return the parameters (phi and sigma) for
-      # the AR(k) series, not the simulation
       def yule_walker(ts, n, k)
         #parameters: timeseries, no of observations, order
         #returns: simulated autoregression with phi parameters and sigma
         phi, sigma = Pacf::Pacf.yule_walker(ts, k)
-        return ar_sim(n, phi, sigma)
+        return phi, sigma
+        #return ar_sim(n, phi, sigma)
       end
-      # ISSUE: This should return the parameters (phi and sigma) for
-      # the AR(k) series, not the simulation
 
       def levinson_durbin(ts, n, k)
         #parameters;
@@ -59,7 +55,8 @@ module Statsample
         #k: order of AR
         intermediate = Pacf::Pacf.levinson_durbin(ts, k)
         phi, sigma = intermediate[1], intermediate[0]
-        return ar_sim(n, phi, sigma)
+        return phi, sigma
+        #return ar_sim(n, phi, sigma)
       end
 
       #=Autoregressive Simulator
@@ -214,8 +211,6 @@ module Statsample
       end
     end
 
-    # ISSUE: This should be included as a module on
-    #        Statsample::TimeSeries::Arima::KalmanFilter
     module Arima
       class KalmanFilter < Statsample::Vector
         include Statsample::TimeSeries
