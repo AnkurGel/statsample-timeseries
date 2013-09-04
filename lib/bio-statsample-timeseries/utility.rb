@@ -78,8 +78,8 @@ module Statsample
     #Class method
     #Returns the chain product of two matrices
     #==Usage:
-    #Let `a` be 4 * 3 matrix, 
-    #Let `b` be 3 * 3 matrix, 
+    #Let `a` be 4 * 3 matrix,
+    #Let `b` be 3 * 3 matrix,
     #Let `c` be 3 * 1 matrix,
     #then `Matrix.chain_dot(a, b, c)`
     #===*NOTE*: Send the matrices in multiplicative order with proper dimensions
@@ -113,6 +113,63 @@ module Statsample
         end
       end
       return Matrix.rows(vectors)
+    end
+  end
+
+
+  class Minimizer
+    include GSL::Min
+
+    #=Square Root Minimizer
+    #Finds square root of a number by minimization.
+    #Makes use of GSL::Min Brent approach for minimization
+    #
+    #*Parameters*:
+    #-_number_::integer, number for which square root is to be find
+    #-_guess_::float/integer, initial guess.
+    #-_x_low_::float/integer, lower boundary.
+    #-_x_up_ ::float/integer, upper boundary
+    #
+    #*USAGE*:
+    #  m = Minimizer.sqrt(3, 1.0, 0.0, 6.0)
+    #  #=> 1.732053341256471
+    #
+    #  m = Minimizer.sqrt(8, 1.0, 0.0, 4.0)
+    #  #=> 2.828389558237785
+    #
+    #*Returns*:
+    #Square root of type float.
+    def self.sqrt(number, guess, x_low, x_up)
+      proc = Proc.new do |num|
+        GSL::Function.alloc do |x|
+          (x ** 2 - num).abs
+        end
+      end
+
+      #getting function object for number
+      diff = proc.call(number)
+
+      iter = 0
+      max_iter = 500
+
+      begin
+        gmf = FMinimizer.alloc("brent")
+        gmf.set(diff, guess, x_low, x_up)
+      rescue
+        puts "Error encountered"
+      end
+
+      status = -2
+      while status == GSL::CONTINUE and iter < max_iter
+        iter += 1
+        status = gmf.iterate
+        status = gmf.test_interval(0.001, 0.0)
+        if status == GSL::SUCCESS
+          guess = gmf.x_minimum
+          puts guess
+          return guess
+        end
+      end
     end
   end
 end
