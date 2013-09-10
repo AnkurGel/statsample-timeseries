@@ -271,6 +271,30 @@ module Statsample
           arr[0] = 1.0
           return arr
         end
+
+        #
+        def self.ll(params, series, p, q)
+          phi = []
+          theta = []
+          phi = params[0...p] if p > 0
+          theta = params[(p)...(p + q)] if q > 0
+
+          puts "phi(#{p}): #{phi} |theta(#{q}): #{theta}"
+          [phi, theta].each do |v|
+            if v.map(&:abs).inject(:+) > 1
+              return -1000000000
+            end
+          end
+
+          m = [p, q].max
+          h = Matrix.column_vector(Array.new(m,0))
+          m.times do |i|
+            h[i,0] = phi[i] if i<= p
+            h[i,0] = h[i,0] + theta[i]
+          end
+
+          #continuing
+        end
       end
     end
   end
