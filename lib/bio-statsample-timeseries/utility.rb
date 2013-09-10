@@ -114,7 +114,25 @@ module Statsample
       end
       return Matrix.rows(vectors)
     end
-  end
 
+    def set_column(i, arr)
+      columns = self.column_vectors
+      column = columns[i].to_a
+      column[0...arr.size] = arr
+      columns[i] = column
+      return Matrix.columns(columns)
+    end
+    
+    def set_row(i, arr)
+      #similar implementation as set_column
+      #writing and commenting metaprogrammed version
+      #Please to give opinion :)
+      rows = self.row_vectors
+      row = rows[i].to_a
+      row[0...arr.size] = arr
+      rows[i] = row
+      return Matrix.rows(rows)
+    end
+  end
 
 end
