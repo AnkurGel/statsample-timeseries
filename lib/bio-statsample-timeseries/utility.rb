@@ -133,6 +133,19 @@ module Statsample
       rows[i] = row
       return Matrix.rows(rows)
     end
+
+    #Metaprogrammed version of set_column, set_row
+    # self.class_eval do
+    #   ["row", "column"].each do |dimension|
+    #     define_method("set_#{dimension}s") do |i, arr|
+    #       dims = send("#{dimension}_vectors")
+    #       dim = dims[i].to_a
+    #       dim[0...arr.size] = arr
+    #       dims[i] = dim
+    #       return Matrix.send("#{dimension}s", dims)
+    #     end
+    #   end
+    # end
   end
 
 end
