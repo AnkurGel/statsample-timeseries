@@ -293,7 +293,28 @@ module Statsample
             h[i,0] = h[i,0] + theta[i]
           end
 
-          #continuing
+          t = Matrix.zero(m)
+          #set_column is available in utility.rb
+          t = t.set_column(i, phi)
+          if(m > 1)
+            t[0...(m-1), 1...m] = Matrix.I(m-1)
+            #chances of extra constant 0 values as unbalanced column, so:
+            t = Matrix.columns(t.column_vectors)
+          end
+
+          g = Matrix[[1]]
+          a_t = Matrix.column_vector(Array.new(m,0))
+          v_t = 0
+          n = timeseries.length
+          z = Matrix.row_vector(Array.new(m,0))
+          z[0,0] = 1
+          p_t = Matrix.I(m)
+          v_t, f_t = Array.new(n,0), Array.new(n, 0)
+
+          n.times do |i|
+            #  v_t[i] = timeseries[i] - z
+            #  continuing..
+          end
         end
       end
     end
