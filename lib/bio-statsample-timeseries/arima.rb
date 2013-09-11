@@ -273,7 +273,7 @@ module Statsample
         end
 
         #
-        def self.ll(params, series, p, q)
+        def self.ll(params, timeseries, p, q)
           phi = []
           theta = []
           phi = params[0...p] if p > 0
@@ -289,13 +289,13 @@ module Statsample
           m = [p, q].max
           h = Matrix.column_vector(Array.new(m,0))
           m.times do |i|
-            h[i,0] = phi[i] if i<= p
-            h[i,0] = h[i,0] + theta[i]
+            h[i,0] = phi[i] if i< p
+            h[i,0] = h[i,0] + theta[i] if i < q
           end
 
           t = Matrix.zero(m)
           #set_column is available in utility.rb
-          t = t.set_column(i, phi)
+          t = t.set_column(0, phi)
           if(m > 1)
             t[0...(m-1), 1...m] = Matrix.I(m-1)
             #chances of extra constant 0 values as unbalanced column, so:
@@ -304,7 +304,7 @@ module Statsample
 
           g = Matrix[[1]]
           a_t = Matrix.column_vector(Array.new(m,0))
-          n = timeseries.length
+          n = timeseries.size
           z = Matrix.row_vector(Array.new(m,0))
           z[0,0] = 1
           p_t = Matrix.I(m)
@@ -329,8 +329,9 @@ module Statsample
           
           f_t_log_sum = f_t.map { |x| Math.log(x) }.inject(:+)
           ll = -0.5 * (n*Math.log(sigma_2) + f_t_log_sum + n)
+          return -ll
 
-          #continuing -  attr part left
+          #continuing 
         end
       end
     end
