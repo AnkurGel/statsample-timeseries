@@ -272,6 +272,22 @@ module Statsample
           return arr
         end
 
+
+        def self.ks(timeseries, p, q)
+          include GSL
+          include GSL::MultiMin
+          initial = Array.new((p+q), 0.0)
+          my_f = Proc.new{ |timeseries, p, q, params|
+            self.ll(params, timeseries, p, q)
+          }
+          my_func = Function.alloc(my_f, 2)
+          my_func.set_params(initial)
+
+          minimizer = FMinimizer.alloc("nmsimplex", np)
+          ss = GSL::Vector.alloc(np)
+          #continuing..
+        end
+
         #
         def self.ll(params, timeseries, p, q)
           phi = []
@@ -279,7 +295,6 @@ module Statsample
           phi = params[0...p] if p > 0
           theta = params[(p)...(p + q)] if q > 0
 
-          puts "phi(#{p}): #{phi} |theta(#{q}): #{theta}"
           [phi, theta].each do |v|
             if v.map(&:abs).inject(:+) > 1
               return -1000000000
@@ -315,7 +330,7 @@ module Statsample
 
             f_t[i] = (z * p_t * (z.transpose)).map { |x| x + 1 }[0,0]
 
-            k_t = (t * p_t * z.transpose).map { |x| x + h }.map { |x| x / f_t[i] }
+            k_t = ((t * p_t * z.transpose) + h).map { |x| x / f_t[i] }
 
             a_t = (t * a_t) + (k_t * v_t[i])
             l_t = t - k_t * z
@@ -329,9 +344,8 @@ module Statsample
           
           f_t_log_sum = f_t.map { |x| Math.log(x) }.inject(:+)
           ll = -0.5 * (n*Math.log(sigma_2) + f_t_log_sum + n)
+          puts ("ll = #{-ll}")
           return -ll
-
-          #continuing 
         end
       end
     end
