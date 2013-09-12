@@ -289,10 +289,15 @@ module Statsample
             self.ll(params, timeseries, p, q)
           }
           my_func = Function.alloc(my_f, 2)
-          my_func.set_params(initial)
+          my_func.set_params([timeseries, p, q])
+          x = GSL::Vector.alloc(initial)
+          ss = GSL::Vector.alloc(np)
+          ss.set_all(0.5)
 
           minimizer = FMinimizer.alloc("nmsimplex", np)
-          ss = GSL::Vector.alloc(np)
+          minimizer.set(my_func, x, ss)
+          #ERROR:GSL::ERROR::EBADLEN: Ruby/GSL error code 19, vector length not compatible with function (file fminimizer.c, line 86), matrix/vector sizes are not conformant
+
           #continuing..
         end
 
