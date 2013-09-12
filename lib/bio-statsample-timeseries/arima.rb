@@ -277,7 +277,15 @@ module Statsample
           include GSL
           include GSL::MultiMin
           initial = Array.new((p+q), 0.0)
-          my_f = Proc.new{ |timeseries, p, q, params|
+
+          my_f = Proc.new{ |x, params|
+            #In rb-gsl, params remain idle, x is varied upon
+            #In R code, initial parameters varied in each iteration
+            #my_func.set_params([(1..100).to_a.to_ts, p_value, q_value])
+            timeseries = params[0]
+            p,q = params[1], params[2]
+            params = x
+
             self.ll(params, timeseries, p, q)
           }
           my_func = Function.alloc(my_f, 2)
