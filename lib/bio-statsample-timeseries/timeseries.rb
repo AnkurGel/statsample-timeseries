@@ -107,7 +107,7 @@ module Statsample
         else
           demeaned_series = self
         end
-        n = self.acf.size
+        n = (10 * Math.log10(size)).to_i + 1
         m = self.mean
         if unbiased
           d = Array.new(self.size, self.size)
