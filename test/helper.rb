@@ -10,9 +10,9 @@ end
 require 'minitest/unit'
 require 'shoulda'
 require 'shoulda-context'
-require 'mocha'
+require 'mocha/setup'
 
-require 'bio-statsample-timeseries'
+#require 'bio-statsample-timeseries'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
