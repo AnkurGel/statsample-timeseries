@@ -5,7 +5,7 @@ module Statsample
         include Statsample::TimeSeries
         include GSL::MultiMin
         attr_accessor :ts, :p, :i, :q
-
+        attr_reader :ar, :ma
         def initialize(ts=[].to_ts, p=0, i=0, q=0)
           @ts = ts
           @p = p
@@ -39,7 +39,7 @@ module Statsample
             timeseries = params[0]
             p,q = params[1], params[2]
             params = x
-            puts x
+            #puts x
             KalmanFilter.ll(x.to_a, timeseries, p, q)
           }
           np = @p + @q
@@ -51,6 +51,24 @@ module Statsample
 
           minimizer = FMinimizer.alloc("nmsimplex", np)
           minimizer.set(my_func, x, ss)
+          status = GSL::CONTINUE
+          iter = 0
+          while status == GSL::CONTINUE && iter < 100
+            iter += 1
+            status = minimizer.iterate()
+            status = minimizer.test_size(1e-2)
+            x = minimizer.x
+          #  printf("%5d ", iter)
+          #  for i in 0...np do
+          #    puts "#{x[i]}.to_f"
+          #    #printf("%10.3e ", x[i].to_f)
+          #  end
+          #  printf("f() = %7.3f size = %.3f\n", minimizer.fval, minimizer.size)
+          end
+          #
+          @ar = (p > 0) ? x[0...p].to_a : []
+          @ma = (q > 0) ? x[p..x.size-1].to_a : []
+          x.to_a
         end
 
         #=ll
@@ -65,7 +83,7 @@ module Statsample
 
           [phi, theta].each do |v|
             if v.size>0 and v.map(&:abs).inject(:+) > 1
-              return -1000000000
+              return
             end
           end
 
