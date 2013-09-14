@@ -2,6 +2,8 @@ require 'bio-statsample-timeseries/arima/likelihood'
 module Statsample
   module TimeSeries
     module Arima
+	  # SUGGESTION: Remove the subclassing on Vector. Is not necessary.
+	  
       class KalmanFilter < Statsample::Vector
         include Statsample::TimeSeries
         include GSL::MultiMin
@@ -42,7 +44,7 @@ module Statsample
             p,q = params[1], params[2]
             params = x
             #puts x
-            Arima::KF::LogLikelihood.new(x.to_a, timeseries, p, q).ll
+            -Arima::KF::LogLikelihood.new(x.to_a, timeseries, p, q).ll
             #KalmanFilter.ll(x.to_a, timeseries, p, q)
           }
           np = @p + @q
@@ -140,6 +142,7 @@ module Statsample
         #-_q_::integer, The MA order in ARMA model
         #-_p_::integer, The AR order in ARMA model
         #*References*: Statsmodels tsa, Durbin and Koopman
+        # SUGGESTION: Remove this.
         def self.R(r, k, q, p)
           arr = Matrix.column_vector(Array.new(r,0.0))
 
@@ -151,6 +154,7 @@ module Statsample
         #*Parameters*
         #-_r_::integer, max(p, q+1)
         #Returns: vector
+        # SUGGESTION: Remove this.        
         def self.Z(r)
           arr = Statsample::Vector.new(Array.new(r, 0.0), :scale)
           arr[0] = 1.0
