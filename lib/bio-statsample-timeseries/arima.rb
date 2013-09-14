@@ -319,7 +319,7 @@ module Statsample
           theta = params[(p)...(p + q)] if q > 0
 
           [phi, theta].each do |v|
-            if v.map(&:abs).inject(:+) > 1
+            if v.size>0 and v.map(&:abs).inject(:+) > 1
               return -1000000000
             end
           end
@@ -367,7 +367,7 @@ module Statsample
           
           f_t_log_sum = f_t.map { |x| Math.log(x) }.inject(:+)
           ll = -0.5 * (n*Math.log(sigma_2) + f_t_log_sum + n)
-          puts ("ll = #{-ll}")
+          #puts ("ll = #{-ll}")
           return -ll
         end
       end
