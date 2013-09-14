@@ -272,9 +272,18 @@ module Statsample
           return arr
         end
 
-
+        #=Kalman Filter
+        #Function which minimizes KalmanFilter.ll iteratively for initial parameters
+        #*Parameters*:
+        #-_timeseries_: timeseries object, against which the ARMA params has to be estimated
+        #-_p_: order of AR
+        #-_q_: order of MA
+        #*Usage*:
+        #- ts = (1..100).to_a.to_ts
+        #- KalmanFilter.ks(ts, 3, 1)
+        #NOTE: Suceptible to syntactical change later. Can be called directly on timeseries.
+        #NOTE: Return parameters
         def self.ks(timeseries, p, q)
-          include GSL
           include GSL::MultiMin
           initial = Array.new((p+q), 0.0)
 
@@ -285,23 +294,24 @@ module Statsample
             timeseries = params[0]
             p,q = params[1], params[2]
             params = x
-
-            self.ll(params, timeseries, p, q)
+            puts x
+            self.ll(x.to_a, timeseries, p, q)
           }
-          my_func = Function.alloc(my_f, 2)
+          np = p + q
+          my_func = Function.alloc(my_f, np)
           my_func.set_params([timeseries, p, q])
           x = GSL::Vector.alloc(initial)
           ss = GSL::Vector.alloc(np)
-          ss.set_all(0.5)
+          ss.set_all(0.1)
 
           minimizer = FMinimizer.alloc("nmsimplex", np)
           minimizer.set(my_func, x, ss)
-          #ERROR:GSL::ERROR::EBADLEN: Ruby/GSL error code 19, vector length not compatible with function (file fminimizer.c, line 86), matrix/vector sizes are not conformant
-
-          #continuing..
         end
 
-        #
+        #=ll
+        #Kalman filter function.
+        #iteratively minimized by simplex algorithm via KalmanFilter.ks
+        #Not meant to be used directly. Will make it private later.
         def self.ll(params, timeseries, p, q)
           phi = []
           theta = []
