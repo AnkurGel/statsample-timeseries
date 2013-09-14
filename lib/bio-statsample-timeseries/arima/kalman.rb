@@ -1,3 +1,4 @@
+require 'bio-statsample-timeseries/arima/likelihood'
 module Statsample
   module TimeSeries
     module Arima
@@ -41,7 +42,8 @@ module Statsample
             p,q = params[1], params[2]
             params = x
             #puts x
-            KalmanFilter.ll(x.to_a, timeseries, p, q)
+            Arima::KF::LogLikelihood.new(x.to_a, timeseries, p, q).ll
+            #KalmanFilter.ll(x.to_a, timeseries, p, q)
           }
           np = @p + @q
           my_func = Function.alloc(my_f, np)
@@ -76,67 +78,26 @@ module Statsample
           x.to_a
         end
 
-        #=ll
-        #Kalman filter function.
-        #iteratively minimized by simplex algorithm via KalmanFilter.ks
-        #Not meant to be used directly. Will make it private later.
-        def self.ll(params, timeseries, p, q)
-          phi = []
-          theta = []
-          phi = params[0...p] if p > 0
-          theta = params[(p)...(p + q)] if q > 0
 
-          [phi, theta].each do |v|
-            if v.size>0 and v.map(&:abs).inject(:+) > 1
-              return
-            end
-          end
-
-          m = [p, q].max
-          h = Matrix.column_vector(Array.new(m,0))
-          m.times do |i|
-            h[i,0] = phi[i] if i< p
-            h[i,0] = h[i,0] + theta[i] if i < q
-          end
-
-          t = Matrix.zero(m)
-          #set_column is available in utility.rb
-          t = t.set_column(0, phi)
-          if(m > 1)
-            t[0...(m-1), 1...m] = Matrix.I(m-1)
-            #chances of extra constant 0 values as unbalanced column, so:
-            t = Matrix.columns(t.column_vectors)
-          end
-
-          g = Matrix[[1]]
-          a_t = Matrix.column_vector(Array.new(m,0))
-          n = timeseries.size
-          z = Matrix.row_vector(Array.new(m,0))
-          z[0,0] = 1
-          p_t = Matrix.I(m)
-          v_t, f_t = Array.new(n,0), Array.new(n, 0)
-
-          n.times do |i|
-            v_t[i] = (z * a_t).map { |x| timeseries[i] - x }[0,0]
-
-            f_t[i] = (z * p_t * (z.transpose)).map { |x| x + 1 }[0,0]
-
-            k_t = ((t * p_t * z.transpose) + h).map { |x| x / f_t[i] }
-
-            a_t = (t * a_t) + (k_t * v_t[i])
-            l_t = t - k_t * z
-            j_t = h - k_t
-
-            p_t = (t * p_t * (l_t.transpose)) + (h * (j_t.transpose))
-          end
-
-          pot = v_t.map(&:square).zip(f_t).map { |x,y| x / y}.inject(:+)
-          sigma_2 = pot.to_f / n.to_f
-
-          f_t_log_sum = f_t.map { |x| Math.log(x) }.inject(:+)
-          ll = -0.5 * (n*Math.log(sigma_2) + f_t_log_sum + n)
-          #puts ("ll = #{-ll}")
-          return -ll
+        #=log_likelihood
+        #Computes Log likelihood on given parameters, ARMA order and timeseries
+        #*params*:
+        #-_params_::array of floats, contains phi/theta parameters
+        #-_timeseries_::timeseries object
+        #-_p_::integer, AR(p) order
+        #-_q_::integer, MA(q) order
+        #*Returns*:
+        #LogLikelihood object
+        #*Usage*:
+        # s = (1..100).map { rand }.to_ts
+        # p, q  = 1, 0
+        # ll = KalmanFilter.log_likelihood([0.2], s, p, q)
+        # ll.log_likelihood
+        # #=> -22.66
+        # ll.sigma
+        # #=> 0.232
+        def self.log_likelihood(params, timeseries, p, q)
+          Arima::KF::LogLikelihood.new(params, timeseries, p, q)
         end
 
         #=T
@@ -148,26 +109,26 @@ module Statsample
         #-_q_::integer, The AR coefficient of ARMA model
 
         #*References*: Statsmodels tsa, Durbin and Koopman Section 4.7
-        def self.T(r, k, p)
-          arr = Matrix.zero(r)
-          params_padded  = Statsample::Vector.new(Array.new(r, 0), :scale)
-
-          params_padded[0...p] = params[k...(p+k)]
-          intermediate_matrix = (r-1).times.map { Array.new(r, 0) }
-          #appending an array filled with padded values in beginning
-          intermediate_matrix[0,0] = [params_padded]
-
-          #now generating column matrix for that:
-          arr = Matrix.columns(intermediate_matrix)
-          arr_00 = arr[0,0]
-
-          #identify matrix substituition in matrix except row[0] and column[0]
-          r.times do |i|
-            arr[r,r] = 1
-          end
-          arr[0,0] = arr_00
-          arr
-        end
+        #def self.T(r, k, p)
+        #  arr = Matrix.zero(r)
+        #  params_padded  = Statsample::Vector.new(Array.new(r, 0), :scale)
+        #
+        #  params_padded[0...p] = params[k...(p+k)]
+        #  intermediate_matrix = (r-1).times.map { Array.new(r, 0) }
+        #  #appending an array filled with padded values in beginning
+        #  intermediate_matrix[0,0] = [params_padded]
+        #
+        #  #now generating column matrix for that:
+        #  arr = Matrix.columns(intermediate_matrix)
+        #  arr_00 = arr[0,0]
+        #
+        #  #identify matrix substituition in matrix except row[0] and column[0]
+        #  r.times do |i|
+        #    arr[r,r] = 1
+        #  end
+        #  arr[0,0] = arr_00
+        #  arr
+        #end
 
 
         #=R

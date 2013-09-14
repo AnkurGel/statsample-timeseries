@@ -1,5 +1,6 @@
 #require 'debugger'
-require 'bio-statsample-timeseries/kalman'
+require 'bio-statsample-timeseries/arima/kalman'
+require 'bio-statsample-timeseries/arima/likelihood'
 module Statsample
   module TimeSeries
 
