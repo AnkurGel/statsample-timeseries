@@ -11,6 +11,7 @@ module Statsample
           @p = p
           @i = i
           @q = q
+          ks #call the filter
         end
 
         def to_s
@@ -55,9 +56,13 @@ module Statsample
           iter = 0
           while status == GSL::CONTINUE && iter < 100
             iter += 1
-            status = minimizer.iterate()
-            status = minimizer.test_size(1e-2)
-            x = minimizer.x
+            begin
+              status = minimizer.iterate()
+              status = minimizer.test_size(1e-2)
+              x = minimizer.x
+            rescue
+              break
+            end
           #  printf("%5d ", iter)
           #  for i in 0...np do
           #    puts "#{x[i]}.to_f"
@@ -66,8 +71,8 @@ module Statsample
           #  printf("f() = %7.3f size = %.3f\n", minimizer.fval, minimizer.size)
           end
           #
-          @ar = (p > 0) ? x[0...p].to_a : []
-          @ma = (q > 0) ? x[p..x.size-1].to_a : []
+          @ar = (p > 0) ? x.to_a[0...p] : []
+          @ma = (q > 0) ? x.to_a[p...(p+q)] : []
           x.to_a
         end
 
