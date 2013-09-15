@@ -15,7 +15,7 @@ module Statsample
       def self.ks(ts, p, i, q)
         #prototype
         if i > 0
-          #series to be differenciated
+          ts = ts.diff(i).reject { |x| x.nil? }.to_ts
         end
         filter = Arima::KalmanFilter.new(ts, p, i, q)
         filter

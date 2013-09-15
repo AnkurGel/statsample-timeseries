@@ -168,21 +168,28 @@ module Statsample
       end
 
       #=Diff
-      # Performs a first difference of the series.
-      #
-      # The convention is to set the oldest observations (the first ones
-      # in the series) to nil so that the size of the diffed series is the
-      # same as the original.
-      #
+      # Performs the difference of the series.
+      # Note: The first difference of series is X(t) - X(t-1)
+      # But, second difference of series is NOT X(t) - X(t-2)
+      # It is the first difference of the first difference
+      # => (X(t) - X(t-1)) - (X(t-1) - X(t-2))
+      #*Params*:
+      #-_max_lags_::integer, (default: 1), number of differences reqd.
       #*Usage*:
       #
       #  ts = (1..10).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       #
       #  ts.diff   # => [nil, -0.46, 0.21, 0.27, ...]
-      #
-      def diff
-        self - self.lag
+      #*Returns*: Timeseries object
+      def diff(max_lags = 1)
+        ts = self
+        difference = []
+        max_lags.times do
+          difference = ts - ts.lag
+          ts = difference
+        end
+        difference
       end
 
       #=Moving Average
