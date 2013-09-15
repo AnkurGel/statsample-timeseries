@@ -12,6 +12,11 @@ module Statsample
           #Gives sigma value of an ARMA(p,q) process on given parameters
           attr_reader :sigma
 
+          #aic
+          #Gives AIC(Akaike Information Criterion)
+          #https://www.scss.tcd.ie/Rozenn.Dahyot/ST7005/13AICBIC.pdf
+          attr_reader :aic
+
           def initialize(params, timeseries, p, q)
             @params = params
             @timeseries = timeseries
@@ -83,6 +88,7 @@ module Statsample
             @log_likelihood = -0.5 * (n*Math.log(2*Math::PI) + n*Math.log(sigma_2) + f_t_log_sum + n)
             
             @sigma = sigma_2
+            @aic = -(2 * @log_likelihood - 2*(p+q+1))
             #puts ("ll = #{-ll}")
             return @log_likelihood
           end
