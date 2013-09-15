@@ -3,13 +3,14 @@ module Statsample
     module Arima
       module KF
         class LogLikelihood
-          # SUGGESTION: Remove this include.
-          include Statsample::TimeSeries
-          # SUGGESTION
-          # Each reader should be on its own line
-          # with documention on a comment before the
-          # defition. Allows RDoc to parse it.
-          attr_reader :log_likelihood, :sigma
+
+          #log_likelihood
+          #Gives log likelihood value of an ARMA(p, q) process on given parameters
+          attr_reader :log_likelihood
+
+          #sigma
+          #Gives sigma value of an ARMA(p,q) process on given parameters
+          attr_reader :sigma
 
           def initialize(params, timeseries, p, q)
             @params = params
@@ -79,7 +80,7 @@ module Statsample
             sigma_2 = pot.to_f / n.to_f
 
             f_t_log_sum = f_t.map { |x| Math.log(x) }.inject(:+)
-            @log_likelihood = -0.5 * (n*Math.log(2*Math::PI)+   n*Math.log(sigma_2) + f_t_log_sum + n)
+            @log_likelihood = -0.5 * (n*Math.log(2*Math::PI) + n*Math.log(sigma_2) + f_t_log_sum + n)
             
             @sigma = sigma_2
             #puts ("ll = #{-ll}")

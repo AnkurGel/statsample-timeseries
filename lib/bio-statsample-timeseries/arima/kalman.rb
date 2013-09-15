@@ -2,9 +2,8 @@ require 'bio-statsample-timeseries/arima/likelihood'
 module Statsample
   module TimeSeries
     module Arima
-	  # SUGGESTION: Remove the subclassing on Vector. Is not necessary.
-	  
-      class KalmanFilter < Statsample::Vector
+
+      class KalmanFilter
         include Statsample::TimeSeries
         include GSL::MultiMin
         attr_accessor :ts, :p, :i, :q
@@ -131,35 +130,6 @@ module Statsample
         #  arr[0,0] = arr_00
         #  arr
         #end
-
-
-        #=R
-        #The coefficient matrix for the state vector in the observation matrix.
-        #It's dimension is r+k x 1
-        #*Parameters*
-        #-_r_::integer, r is max(p, q+1) where p and q are order of AR and MA respectively
-        #-_k_::integer, number of exogeneous variables in ARMA model
-        #-_q_::integer, The MA order in ARMA model
-        #-_p_::integer, The AR order in ARMA model
-        #*References*: Statsmodels tsa, Durbin and Koopman
-        # SUGGESTION: Remove this.
-        def self.R(r, k, q, p)
-          arr = Matrix.column_vector(Array.new(r,0.0))
-
-          #pending - in kind of difficult end here;
-        end
-
-        #=Z
-        #The Z selector matrix
-        #*Parameters*
-        #-_r_::integer, max(p, q+1)
-        #Returns: vector
-        # SUGGESTION: Remove this.        
-        def self.Z(r)
-          arr = Statsample::Vector.new(Array.new(r, 0.0), :scale)
-          arr[0] = 1.0
-          return arr
-        end
 
       end
     end

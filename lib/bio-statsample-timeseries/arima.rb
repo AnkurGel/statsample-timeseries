@@ -12,24 +12,12 @@ module Statsample
 
     class ARIMA < Statsample::Vector
       include Statsample::TimeSeries
-      # SUGGESTION: We could use an API similar to R
-      #             like
-      #             ar_obj=Statsample::TimeSeries.arima(ds,p,i,q)
-      # 			which calls
-      # 			Statsample::TimeSeries::Arima.new(ds,p,i,q)
       def self.ks(ts, p, i, q)
         #prototype
-        filter = Arima::KalmanFilter.new(ts, p, i, q)
         if i > 0
           #series to be differenciated
         end
-        #if q.zero?
-        #  Arima::KalmanFilter.ks(ts, p, 0)
-        #elsif p.zero?
-        #  Arima::KalmanFilter.ks(ts, 0, q)
-        #else
-        #  Arima::KalmanFilter.ks(ts, p, q)
-        #end
+        filter = Arima::KalmanFilter.new(ts, p, i, q)
         filter
       end
 
