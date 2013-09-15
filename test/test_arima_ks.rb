@@ -69,7 +69,7 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
       end
 
       should "return correct parameters" do
-        assert_equal @kf.p, 1
+        assert_equal @kf.p, 2
         assert_equal @kf.q, 1
         assert_equal @kf.i, 0
       end
@@ -79,8 +79,8 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
         assert_in_delta @kf.ar[1], 0.016
       end
       should "return correct ma estimators" do
-        assert_equal @kf.ma.length, 1
-        assert_equal @kf.ma[0], 0.18
+        assert_in_delta @kf.ma.length, 1
+        assert_in_delta @kf.ma[0], 0.18
       end
     end
 
