@@ -40,6 +40,9 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
       should "return correct sigma" do
         assert_in_delta 1.137915,  @kf_likehood.sigma
       end
+      should "return correct AIC value" do
+        assert_in_delta 301.44, @kf_likehood.aic, 0.1
+      end
 
     end
     context "passed through the Kalman Filter with AR(0.2)" do
@@ -50,10 +53,10 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
         assert_instance_of Statsample::TimeSeries::Arima::KF::LogLikelihood, @kf_likehood
       end
       should "return correct log_likehood" do
-        assert_in_delta -66.40337-0.5*@s.size*(Math.log(2*Math::PI)),  @kf_likehood.log_likelihood
+        assert_in_delta -66.40337-0.5*@s.size*(Math.log(2*Math::PI)),  @kf_likehood.log_likelihood, 0.01
       end
       should "return correct sigma" do
-        assert_in_delta 1.378693,  @kf_likehood.sigma
+        assert_in_delta 1.378693,  @kf_likehood.sigma, 0.01
       end
 
     end
@@ -75,12 +78,12 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
       end
       should "return correct AR estimators" do
         assert_equal @kf.ar.length, 2
-        assert_in_delta @kf.ar[0], 0.45
-        assert_in_delta @kf.ar[1], 0.016
+        assert_in_delta @kf.ar[0], 0.45, 0.01
+        assert_in_delta @kf.ar[1], 0.016, 0.01
       end
       should "return correct ma estimators" do
-        assert_in_delta @kf.ma.length, 1
-        assert_in_delta @kf.ma[0], 0.18
+        assert_equal @kf.ma.length, 1
+        assert_in_delta @kf.ma[0], 0.18, 0.01
       end
     end
 
@@ -89,10 +92,13 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
         @ll = Statsample::TimeSeries::Arima::KF::LogLikelihood.new([0.45, 0.16, 0.18], @s, 2, 1)
       end
       should "return correct log likelihood" do
-        assert_in_delta 56.35, @ll.log_likelihood
+        assert_in_delta -149.55, @ll.log_likelihood, 0.01
       end
       should "return correct sigma" do
-        assert_in_delta 1.11, @ll.sigma
+        assert_in_delta 1.14, @ll.sigma, 0.1
+      end
+      should "return correct AIC value" do
+        assert_in_delta 307.11, @ll.aic, 0.01
       end
     end
   end
