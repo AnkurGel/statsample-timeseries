@@ -27,7 +27,21 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
         assert_equal @kf.ma.length,0
       end
     end
+    context "passed through the Kalman Filter with AR(0.564)" do
+      setup do
+        @kf_likehood=Statsample::TimeSeries::Arima::KalmanFilter.log_likelihood([0.564],@s,1,0)
+      end
+      should "return correct object for log_likehood" do
+        assert_instance_of Statsample::TimeSeries::Arima::KF::LogLikelihood, @kf_likehood
+      end
+      should "return correct log_likehood" do
+        assert_in_delta -148.7003,  @kf_likehood.log_likelihood
+      end
+      should "return correct sigma" do
+        assert_in_delta 1.137915,  @kf_likehood.sigma
+      end
 
+    end
     context "passed through the Kalman Filter with AR(0.2)" do
       setup do
         @kf_likehood=Statsample::TimeSeries::Arima::KalmanFilter.log_likelihood([0.2],@s,1,0)
@@ -36,7 +50,7 @@ class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
         assert_instance_of Statsample::TimeSeries::Arima::KF::LogLikelihood, @kf_likehood
       end
       should "return correct log_likehood" do
-        assert_in_delta 66.40337,  @kf_likehood.log_likelihood
+        assert_in_delta -66.40337-0.5*@s.size*(Math.log(2*Math::PI)),  @kf_likehood.log_likelihood
       end
       should "return correct sigma" do
         assert_in_delta 1.378693,  @kf_likehood.sigma
