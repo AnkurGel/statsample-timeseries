@@ -12,6 +12,24 @@ module Statsample
 
     class ARIMA < Statsample::Vector
       include Statsample::TimeSeries
+
+      #Kalman filter on ARIMA model
+      #*Params*:
+      #-_ts_::timeseries object
+      #-_p_::AR order
+      #-_i_::Integerated part
+      #-_q_::MA order
+      #
+      #*Usage*:
+      # ts = (1..100).map { rand }.to_ts
+      # k_obj = ARIMA.ks(ts, 2, 1, 1)
+      # k_obj.ar
+      # #=> AR's phi coefficients
+      # k_obj.ma 
+      # #=> MA's theta coefficients
+      #
+      #*Returns*:
+      #Kalman filter object
       def self.ks(ts, p, i, q)
         #prototype
         if i > 0
