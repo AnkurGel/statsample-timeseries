@@ -34,6 +34,16 @@ Please install [`rb-gsl`](http://rb-gsl.rubyforge.org/) which is a Ruby wrapper 
 The [API doc](http://rubydoc.info/gems/bio-statsample-timeseries/0.2.0/frames) is online. For more code examples see the test files in
 the source tree.
 
+
+## Contributing
+
+* Fork the project. 
+* Add/Modify code. 
+* Write equivalent documentation and **tests**
+* Run `rake test` to verify that all test case passes
+* Pull request. :)
+
+ 
 ## Project home page
 
 Information on the source tree, documentation, examples, issues and
