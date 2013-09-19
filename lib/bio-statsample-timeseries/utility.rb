@@ -12,9 +12,9 @@ module Statsample
     def squares_of_sum(demean = false)
       if demean
         m = self.mean
-        self.map { |x| (x-m) }.sum ** 2
+        self.map { |x| (x-m) }.sum**2
       else
-        return self.sum.to_f ** 2
+        return self.sum.to_f**2
       end
     end
   end
@@ -27,7 +27,7 @@ module Statsample
     #Necessary for computations in various processes
     def squares_of_sum
       (0...column_size).map do |j|
-        self.column(j).sum ** 2
+        self.column(j).sum**2
       end
     end
 

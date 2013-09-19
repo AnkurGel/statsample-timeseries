@@ -10,6 +10,7 @@
 
 require 'statsample'
 require_relative 'bio-statsample-timeseries/timeseries.rb'
+require_relative 'bio-statsample-timeseries/regression'
 require_relative 'bio-statsample-timeseries/arima.rb'
 require_relative 'bio-statsample-timeseries/arima/kalman'
 require_relative 'bio-statsample-timeseries/arima/likelihood'
