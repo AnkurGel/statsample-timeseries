@@ -25,8 +25,16 @@ module Statsample
         def self.h(x, b, y)
           x_t = x.transpose
           mu_flat = mu(x,b).column_vectors.map(&:to_a).flatten
-          #continuing
+          column_data = y.zip(mu_flat).collect { |x| x.inject(:-) }
+          x_t * Matrix.columns([column_data])
         end
+
+        def self.j(x, b)
+          w_matrix = w(x, b)
+          jacobian_matrix = x.transpose * w_matrix * x
+          jacobian_matrix.map { |x| -x }
+        end
+
       end
     end
   end
