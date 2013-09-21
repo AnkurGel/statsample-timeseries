@@ -5,8 +5,12 @@ module Statsample
 
     def self.glm(x, y, method=:poisson)
       if method.downcase.to_sym == :poisson
-        #Statsample::Regression::GLM::Poisson.new(x,y)
+        obj = Statsample::Regression::GLM::Poisson.new(x,y)
+      elsif method.downcase.to_sym == :logit
+        obj = Statsample::Regression::GLM::Logistic.new(x,y)
       end
+      obj
+      #now, #irwls method is available to be called on returned obj
     end
 
     def self.irwls(x, y, mu, w, j, h, epsilon = 1e-7, max_iter = 100)
