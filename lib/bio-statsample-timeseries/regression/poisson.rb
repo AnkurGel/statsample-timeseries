@@ -20,7 +20,7 @@ module Statsample
         def self.w(x, b)
           poisson_mu = mu(x,b)
           mu_flat = poisson_mu.column_vectors.map(&:to_a).flatten
-          
+
           w_mat = Matrix.I(mu_flat.size)
           mu_enum = mu_flat.to_enum
           return w_mat.map do |x|

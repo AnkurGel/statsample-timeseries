@@ -18,11 +18,8 @@ module Statsample
       converged = false
       1.upto(max_iter) do |i|
         #conversion from : (solve(j(x,b)) %*% h(x,b,y))
-        #p j.call(x,b)
-        #p h.call(x,b,y)
-        # Remember that we need here the inverse of j -> J^-1
-        # On R, solve gives you the inverse
-        intermediate = (j.call(x,b) * h.call(x,b,y))
+
+        intermediate = (j.call(x,b).inverse * h.call(x,b,y))
         b_new = b - intermediate
         
         if((b_new - b).map(&:abs)).to_a.flatten.inject(:+) < epsilon
