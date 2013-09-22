@@ -41,6 +41,10 @@ module Statsample
           jacobian_matrix.map { |x| -x }
         end
 
+        #def to_s
+        #  sprintf("Poisson Regression")
+        #end
+
         def irwls
           x,y = @x,@y
           #calling irwls on Regression and passing equivalent methods in lambdas.

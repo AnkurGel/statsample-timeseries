@@ -6,7 +6,7 @@ module Statsample
     def self.glm(x, y, method=:poisson)
       if method.downcase.to_sym == :poisson
         obj = Statsample::Regression::GLM::Poisson.new(x,y)
-      elsif method.downcase.to_sym == :logit
+      elsif method.downcase.to_sym == :binomial
         obj = Statsample::Regression::GLM::Logistic.new(x,y)
       end
       obj
