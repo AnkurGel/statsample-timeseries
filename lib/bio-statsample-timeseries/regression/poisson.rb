@@ -9,7 +9,6 @@ module Statsample
           @x = x
           @y = y
         end
-
         def self.mu(x, b, link=:log)
           if link.downcase.to_sym == :log
             (x * b).map { |y| Math.exp(y) }
@@ -21,7 +20,8 @@ module Statsample
         def self.w(x, b)
           poisson_mu = mu(x,b)
           mu_flat = poisson_mu.column_vectors.map(&:to_a).flatten
-          w_mat = Matrix.I(mu.size)
+          
+          w_mat = Matrix.I(mu_flat.size)
           mu_enum = mu_flat.to_enum
           return w_mat.map do |x|
             x.eql?(1) ? mu_enum.next : x
