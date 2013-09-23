@@ -6,8 +6,22 @@ module Statsample
       class KalmanFilter
         include Statsample::TimeSeries
         include GSL::MultiMin
-        attr_accessor :ts, :p, :i, :q
-        attr_reader :ar, :ma
+
+        #timeseries object
+        attr_accessor :ts
+        #Autoregressive order
+        attr_accessor :p
+        #Integerated part order
+        attr_accessor :i
+        #Moving average order
+        attr_accessor :q
+
+        # Autoregressive coefficients
+        attr_reader :ar
+        # Moving average coefficients
+        attr_reader :ma
+
+        #Creates a new KalmanFilter object and computes the likelihood
         def initialize(ts=[].to_ts, p=0, i=0, q=0)
           @ts = ts
           @p = p
@@ -21,17 +35,14 @@ module Statsample
                   @p, @i, @q, @ts.size, @ts.to_a.join(','))
         end
 
-        #=Kalman Filter
-        #Function which minimizes KalmanFilter.ll iteratively for initial parameters
-        #*Parameters*:
-        #-_timeseries_: timeseries object, against which the ARMA params has to be estimated
-        #-_p_: order of AR
-        #-_q_: order of MA
-        #*Usage*:
-        #- ts = (1..100).to_a.to_ts
-        #- KalmanFilter.ks(ts, 3, 1)
-        #NOTE: Suceptible to syntactical change later. Can be called directly on timeseries.
-        #NOTE: Return parameters
+        # = Kalman Filter
+        #  Function which minimizes KalmanFilter.ll iteratively for initial parameters
+        # == Usage
+        #    @s = [-1.16025577,0.64758021,0.77158601,0.14989543,2.31358162,3.49213868,1.14826956,0.58169457,-0.30813868,-0.34741084,-1.41175595,0.06040081, -0.78230232,0.86734837,0.95015787,-0.49781397,0.53247330,1.56495187,0.30936619,0.09750217,1.09698829,-0.81315490,-0.79425607,-0.64568547,-1.06460320,1.24647894,0.66695937,1.50284551,1.17631218,1.64082872,1.61462736,0.06443761,-0.17583741,0.83918339,0.46610988,-0.54915270,-0.56417108,-1.27696654,0.89460084,1.49970338,0.24520493,0.26249138,-1.33744834,-0.57725961,1.55819543,1.62143157,0.44421891,-0.74000084 ,0.57866347,3.51189333,2.39135077,1.73046244,1.81783890,0.21454040,0.43520890,-1.42443856,-2.72124685,-2.51313877,-1.20243091,-1.44268002 ,-0.16777305,0.05780661,2.03533992,0.39187242,0.54987983,0.57865693,-0.96592469,-0.93278473,-0.75962671,-0.63216906,1.06776183, 0.17476059 ,0.06635860,0.94906227,2.44498583,-1.04990407,-0.88440073,-1.99838258,-1.12955558,-0.62654882,-1.36589161,-2.67456821,-0.97187696, -0.84431782 ,-0.10051809,0.54239549,1.34622861,1.25598105,0.19707759,3.29286114,3.52423499,1.69146333,-0.10150024,0.45222903,-0.01730516, -0.49828727, -1.18484684,-1.09531773,-1.17190808,0.30207662].to_ts
+        #    @kf=Statsample::TimeSeries::ARIMA.ks(@s,1,0,0)
+        #    #=> ks is implictly called in above operation
+        #    @kf.ar
+        #    #=> AR coefficients
         def ks
           initial = Array.new((@p+@q), 0.0)
 
@@ -80,16 +91,16 @@ module Statsample
         end
 
 
-        #=log_likelihood
+        #=Log Likelihood
         #Computes Log likelihood on given parameters, ARMA order and timeseries
-        #*params*:
-        #-_params_::array of floats, contains phi/theta parameters
-        #-_timeseries_::timeseries object
-        #-_p_::integer, AR(p) order
-        #-_q_::integer, MA(q) order
-        #*Returns*:
+        #==params
+        #* *params*: array of floats, contains phi/theta parameters
+        #* *timeseries*: timeseries object
+        #* *p*: integer, AR(p) order
+        #* *q*: integer, MA(q) order
+        #==Returns
         #LogLikelihood object
-        #*Usage*:
+        #==Usage
         # s = (1..100).map { rand }.to_ts
         # p, q  = 1, 0
         # ll = KalmanFilter.log_likelihood([0.2], s, p, q)
@@ -104,12 +115,12 @@ module Statsample
         #=T
         #The coefficient matrix for the state vector in state equation
         # It's dimensions is r+k x r+k
-        #*Parameters*
-        #-_r_::integer, r is max(p, q+1), where p and q are orders of AR and MA respectively
-        #-_k_::integer, number of exogeneous variables in ARMA model
-        #-_q_::integer, The AR coefficient of ARMA model
+        #==Parameters
+        #* *r*: integer, r is max(p, q+1), where p and q are orders of AR and MA respectively
+        #* *k*: integer, number of exogeneous variables in ARMA model
+        #* *q*: integer, The AR coefficient of ARMA model
 
-        #*References*: Statsmodels tsa, Durbin and Koopman Section 4.7
+        #==References Statsmodels tsa, Durbin and Koopman Section 4.7
         #def self.T(r, k, p)
         #  arr = Matrix.zero(r)
         #  params_padded  = Statsample::Vector.new(Array.new(r, 0), :scale)

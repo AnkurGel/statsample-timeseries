@@ -4,15 +4,12 @@ module Statsample
       module KF
         class LogLikelihood
 
-          #log_likelihood
           #Gives log likelihood value of an ARMA(p, q) process on given parameters
           attr_reader :log_likelihood
 
-          #sigma
           #Gives sigma value of an ARMA(p,q) process on given parameters
           attr_reader :sigma
 
-          #aic
           #Gives AIC(Akaike Information Criterion)
           #https://www.scss.tcd.ie/Rozenn.Dahyot/ST7005/13AICBIC.pdf
           attr_reader :aic
@@ -25,7 +22,7 @@ module Statsample
             ll
           end
 
-          #Log likelihood function.
+          #===Log likelihood link function.
           #iteratively minimized by simplex algorithm via KalmanFilter.ks
           #Not meant to be used directly. Will make it private later.
           def ll
