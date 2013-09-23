@@ -5,9 +5,9 @@ module Statsample
     include Summarizable
 
     #=Squares of sum
-    #---
-    #parameter:
-    #-demean::boolean - optional. __default__: false
+    #==Parameter
+    #* *demean*: boolean - optional. __default__: false
+    #==Returns
     #Sums the timeseries and then returns the square
     def squares_of_sum(demean = false)
       if demean
@@ -21,8 +21,7 @@ module Statsample
 
 
   class ::Matrix
-    #=Squares of sum
-    #---
+    #==Squares of sum
     #Does squares of sum in column order.
     #Necessary for computations in various processes
     def squares_of_sum
@@ -31,10 +30,10 @@ module Statsample
       end
     end
 
-    #=Checks if given matrix is symmetric or not
-    #---
-    #returns bool
+    #==Symmetric?
     #`symmetric?` is present in Ruby Matrix 1.9.3+, but not in 1.8.*
+    #===Returns
+    # bool
     def symmetric?
       return false unless square?
 
@@ -46,15 +45,16 @@ module Statsample
       true
     end
 
-    #=Cholesky decomposition
+    #==Cholesky decomposition
     #Reference: http://en.wikipedia.org/wiki/Cholesky_decomposition
-    #---
-    #==Description
+    #===Description
     #Cholesky decomposition is reprsented by `M = L X L*`, where
     #M is the symmetric matrix and `L` is the lower half of cholesky matrix,
     #and `L*` is the conjugate form of `L`.
-    #*Returns* : Cholesky decomposition for a given matrix(if symmetric)
-    #*Utility*: Essential matrix function, requisite in kalman filter, least squares
+    #===Returns
+    # Cholesky decomposition for a given matrix(if symmetric)
+    #===Utility
+    # Essential matrix function, requisite in kalman filter, least squares
     def cholesky
       raise ArgumentError, "Given matrix should be symmetric" unless symmetric?
       c = Matrix.zero(row_size)
@@ -74,15 +74,16 @@ module Statsample
       c
     end
 
-    #=Chain Product
+    #==Chain Product
     #Class method
     #Returns the chain product of two matrices
-    #==Usage:
+    #===Usage:
     #Let `a` be 4 * 3 matrix,
     #Let `b` be 3 * 3 matrix,
     #Let `c` be 3 * 1 matrix,
     #then `Matrix.chain_dot(a, b, c)`
-    #===*NOTE*: Send the matrices in multiplicative order with proper dimensions
+    #===NOTE:
+    # Send the matrices in multiplicative order with proper dimensions
     def self.chain_dot(*args)
       #inspired by Statsmodels
       begin
@@ -93,7 +94,7 @@ module Statsample
     end
 
 
-    #=Adds a column of constants.
+    #==Adds a column of constants.
     #Appends a column of ones to the matrix/array if first argument is false
     #If an n-array, first checks if one column of ones is already present
     #if present, then original(self) is returned, else, prepends with a vector of ones
@@ -115,6 +116,7 @@ module Statsample
       return Matrix.rows(vectors)
     end
 
+    #populates column i of given matrix with arr
     def set_column(i, arr)
       columns = self.column_vectors
       column = columns[i].to_a
@@ -122,7 +124,8 @@ module Statsample
       columns[i] = column
       return Matrix.columns(columns)
     end
-    
+
+    #populates row i of given matrix with arr
     def set_row(i, arr)
       #similar implementation as set_column
       #writing and commenting metaprogrammed version

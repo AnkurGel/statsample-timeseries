@@ -49,20 +49,15 @@ module Statsample
 
       #=Partial Autocorrelation
       #Generates partial autocorrelation series for a timeseries
-      #*Parameters*:
-      #-_max_lags_::integer, optional - provide number of lags
-      #-_method_::string. Default: 'yw'.
-      #    * _yw_:: For yule-walker algorithm unbiased approach
-      #    * _mle_:: For Maximum likelihood algorithm approach
-      #    * _ld_:: Forr Levinson-Durbin recursive approach
-      #Returns - array of pacf
-      #
+      #==Parameters
+      #* *max_lags*: integer, optional - provide number of lags
+      #* *method*: string. Default: 'yw'.
+      #    * *yw*: For yule-walker algorithm unbiased approach
+      #    * *mle*: For Maximum likelihood algorithm approach
+      #    * *ld*: Forr Levinson-Durbin recursive approach
+      #==Returns
+      # array of pacf
       def pacf(max_lags = nil, method = :yw)
-        #parameters:
-        #max_lags => maximum number of lags for pcf
-        #method => for autocovariance in yule_walker:
-          #'yw' for 'yule-walker unbaised', 'mle' for biased maximum likelihood
-          #'ld' for Levinson-Durbin recursion
 
         method = method.downcase.to_sym
         max_lags ||= (10 * Math.log10(size)).to_i
@@ -78,12 +73,11 @@ module Statsample
 	
       #=Autoregressive estimation
       #Generates AR(k) series for the calling timeseries by yule walker.
-      #*Parameters*:
-      #-_n_::integer, (default = 1500) number of observations for AR.
-      #-_k_::integer, (default = 1) order of AR process.
-      #*Returns*:
+      #==Parameters
+      #* *n*: integer, (default = 1500) number of observations for AR.
+      #* *k*: integer, (default = 1) order of AR process.
+      #==Returns
       #Array constituting estimated AR series.
-      #
       def ar(n = 1500, k = 1)
         series = Statsample::TimeSeries.arima
         #series = Statsample::TimeSeries::ARIMA.new
@@ -92,11 +86,11 @@ module Statsample
 
       #=AutoCovariance
       #Provides autocovariance of timeseries.
-      #-Parameters:
-      #demean = true; optional. Supply false if series is not to be demeaned
-      #unbiased = true; optional. true/false for unbiased/biased form of autocovariance
-      #-Returns-: Autocovariance value
-      #
+      #==Parameters
+      #* *demean* = true; optional. Supply false if series is not to be demeaned
+      #* *unbiased* = true; optional. true/false for unbiased/biased form of autocovariance
+      #==Returns
+      # Autocovariance value
       def acvf(demean = true, unbiased = true)
         #TODO: change parameters list in opts.merge as suggested by John
         #functionality: computes autocovariance of timeseries data
@@ -123,7 +117,6 @@ module Statsample
 
       #=Correlation
       #Gives correlation of timeseries.
-      #
       def correlate(a, v, mode = 'full')
         #peforms cross-correlation of two series
         #multiarray.correlate2(a, v, 'full')
@@ -173,15 +166,16 @@ module Statsample
       # But, second difference of series is NOT X(t) - X(t-2)
       # It is the first difference of the first difference
       # => (X(t) - X(t-1)) - (X(t-1) - X(t-2))
-      #*Params*:
-      #-_max_lags_::integer, (default: 1), number of differences reqd.
-      #*Usage*:
+      #==Params
+      #* *max_lags*: integer, (default: 1), number of differences reqd.
+      #==Usage
       #
       #  ts = (1..10).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       #
       #  ts.diff   # => [nil, -0.46, 0.21, 0.27, ...]
-      #*Returns*: Timeseries object
+      #==Returns
+      # Timeseries object
       def diff(max_lags = 1)
         ts = self
         difference = []
@@ -195,10 +189,10 @@ module Statsample
       #=Moving Average
       # Calculates the moving average of the series using the provided
       # lookback argument. The lookback defaults to 10 periods.
-      #*Parameters*:
-      #-_n_::integer, (default = 10) - loopback argument
+      #==Parameters
+      #* *n*: integer, (default = 10) - loopback argument
       #
-      #*Usage*:
+      #==Usage
       #
       #   ts = (1..100).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
@@ -206,7 +200,7 @@ module Statsample
       #   # first 9 observations are nil
       #   ts.ma    # => [ ... nil, 0.484... , 0.445... , 0.513 ... , ... ]
       #
-      #*Returns*:
+      #==Returns
       #Resulting moving average timeseries object
       def ma(n = 10)
         return mean if n >= size
@@ -226,20 +220,18 @@ module Statsample
       # use a lot more than n observations to calculate. The series is stable
       # if the size of the series is >= 3.45 * (n + 1)
       #
-      #*Parameters*:
-      #-_n_::integer, (default = 10)
-      #-_wilder_::boolean, (default = false), if true, 1/n value is used for smoothing;
-      #if false, uses 2/(n+1) value
+      #==Parameters
+      #* *n*: integer, (default = 10)
+      #* *wilder*: boolean, (default = false), if true, 1/n value is used for smoothing; if false, uses 2/(n+1) value
       #
-      #*Usage*:
-      #
+      #==Usage
       #   ts = (1..100).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       #
       #   # first 9 observations are nil
       #   ts.ema   # => [ ... nil, 0.509... , 0.433..., ... ]
       #
-      #*Returns*:
+      #==Returns
       #EMA timeseries
       def ema(n = 10, wilder = false)
         smoother = wilder ? 1.0 / n : 2.0 / (n + 1)
@@ -264,19 +256,18 @@ module Statsample
       # Calculates the MACD (moving average convergence-divergence) of the time
       # series - this is a comparison of a fast EMA with a slow EMA.
       #
-      # *Parameters*:
-      # -_fast_::integer, (default = 12) - fast component of MACD
-      # -_slow_::integer, (default = 26) - slow component of MACD
-      # -_signal_::integer, (default = 9) - signal component of MACD
+      #==Parameters*:
+      #* *fast*: integer, (default = 12) - fast component of MACD
+      #* *slow*: integer, (default = 26) - slow component of MACD
+      #* *signal*: integer, (default = 9) - signal component of MACD
       #
-      # *Usage*:
+      #==Usage
       # ts = (1..100).map { rand }.to_ts
       #            # => [0.69, 0.23, 0.44, 0.71, ...]
       # ts.macd(13)
       #
-      # *Returns*:
-      # Array of two timeseries - comparison of fast EMA with slow
-      # and EMA with signal value
+      #==Returns
+      # Array of two timeseries - comparison of fast EMA with slow and EMA with signal value
       def macd(fast = 12, slow = 26, signal = 9)
         series = ema(fast) - ema(slow)
         [series, series.ema(signal)]

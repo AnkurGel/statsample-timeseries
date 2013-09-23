@@ -15,16 +15,16 @@ module Statsample
 
 
         #=Levinson-Durbin Algorithm
-        #*Parameters*:
-        #-_series_ : timeseries, or a series of autocovariances
-        #-_nlags_: integer(default: 10): largest lag to include in recursion or order of the AR process
-        #-_is_acovf_: boolean(default: false): series is timeseries if it is false, else contains autocavariances
-
-        #*returns*:
-        #-_sigma_v_: estimate of the error variance
-        #-_arcoefs_: AR coefficients
-        #-_pacf_: pacf function
-        #-_sigma_: some function
+        #==Parameters
+        #* *series*: timeseries, or a series of autocovariances
+        #* *nlags*: integer(default: 10): largest lag to include in recursion or order of the AR process
+        #* *is_acovf*: boolean(default: false): series is timeseries if it is false, else contains autocavariances
+        #
+        #==Returns:
+        #* *sigma_v*: estimate of the error variance
+        #* *arcoefs*: AR coefficients
+        #* *pacf*: pacf function
+        #* *sigma*: some function
         def self.levinson_durbin(series, nlags = 10, is_acovf = false)
 
           if is_acovf
@@ -60,26 +60,25 @@ module Statsample
           return [sigma_v, arcoefs, pacf, sig, phi]
         end
 
+        #Returns diagonal elements of matrices
+        # Will later abstract it to utilities
         def self.diag(mat)
-          #returns array of diagonal elements of a matrix.
-          #will later abstract it to matrix.rb in Statsample
           return mat.each_with_index(:diagonal).map { |x, r, c| x }
         end
 
 
         #=Yule Walker Algorithm
-        #From the series, estimates AR(p)(autoregressive) parameter
-        #using Yule-Waler equation. See -
+        #From the series, estimates AR(p)(autoregressive) parameter using Yule-Waler equation. See -
         #http://en.wikipedia.org/wiki/Autoregressive_moving_average_model
-
-        #*Parameters*:
-        #-_ts_::timeseries
-        #-_k_::order, default = 1
-        #-_method_:: can be 'yw' or 'mle'. If 'yw' then it is unbiased, denominator is (n - k)
-
-        #*returns*:
-        #-_rho_:: autoregressive coefficients
-        #-_sigma_:: sigma parameter
+        #
+        #==Parameters
+        #* *ts*: timeseries
+        #* *k*: order, default = 1
+        #* *method*: can be 'yw' or 'mle'. If 'yw' then it is unbiased, denominator is (n - k)
+        #
+        #==Returns
+        #* *rho*: autoregressive coefficients
+        #* *sigma*: sigma parameter
         def self.yule_walker(ts, k = 1, method='yw')
           ts = ts - ts.mean
           n = ts.size
@@ -110,17 +109,21 @@ module Statsample
           return [phi, sigma]
         end
 
+        #=ToEplitz
+        # Generates teoeplitz matrix from an array
+        #http://en.wikipedia.org/wiki/Toeplitz_matrix
+        #Toeplitz matrix are equal when they are stored in row & column major
+        #==Parameters
+        #* *arr*: array of integers;
+        #==Usage
+        #  arr = [0,1,2,3]
+        #  Pacf.toeplitz(arr)
+        #==Returns
+        # [[0, 1, 2, 3],
+        #  [1, 0, 1, 2],
+        #  [2, 1, 0, 1],
+        #  [3, 2, 1, 0]]
         def self.toeplitz(arr)
-          #Generates Toeplitz matrix -
-          #http://en.wikipedia.org/wiki/Toeplitz_matrix
-          #Toeplitz matrix are equal when they are stored in row &
-          #column major
-          #=> arr = [0, 1, 2, 3]
-          #=> result:
-          #[[0, 1, 2, 3],
-          # [1, 0, 1, 2],
-          # [2, 1, 0, 1],
-          # [3, 2, 1, 0]]
           eplitz_matrix = Array.new(arr.size) { Array.new(arr.size) }
 
           0.upto(arr.size - 1) do |i|
@@ -140,6 +143,8 @@ module Statsample
           eplitz_matrix
         end
 
+        #===Solves matrix equations
+        #Solves for X in AX = B
         def self.solve_matrix(matrix, out_vector)
           solution_vector = Array.new(out_vector.size, 0)
           matrix = matrix.to_a
