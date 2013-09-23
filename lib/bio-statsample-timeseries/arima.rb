@@ -13,22 +13,23 @@ module Statsample
     class ARIMA < Statsample::Vector
       include Statsample::TimeSeries
 
-      #Kalman filter on ARIMA model
-      #*Params*:
-      #-_ts_::timeseries object
-      #-_p_::AR order
-      #-_i_::Integerated part
-      #-_q_::MA order
+      #= Kalman filter on ARIMA model
+      #== Params
       #
-      #*Usage*:
+      #* *ts*: timeseries object
+      #* *p*: AR order
+      #* *i*: Integerated part order
+      #* *q*: MA order
+      #
+      #== Usage
       # ts = (1..100).map { rand }.to_ts
-      # k_obj = ARIMA.ks(ts, 2, 1, 1)
+      # k_obj = Statsample::TimeSeries::ARIMA.ks(ts, 2, 1, 1)
       # k_obj.ar
       # #=> AR's phi coefficients
       # k_obj.ma 
       # #=> MA's theta coefficients
       #
-      #*Returns*:
+      #== Returns
       #Kalman filter object
       def self.ks(ts, p, i, q)
         #prototype
@@ -46,25 +47,41 @@ module Statsample
         #or Burg's algorithm(more efficient)
       end
 
-      #Converts a linear array into a vector
+      #Converts a linear array into a Statsample vector
+      #== Parameters
+      #
+      #* *arr*: Array which has to be converted in Statsample vector
       def create_vector(arr)
         Statsample::Vector.new(arr, :scale)
       end
 
-
+      #=Yule Walker
+      #Performs yule walker estimation on given timeseries, observations and order
+      #==Parameters
+      #
+      #* *ts*: timeseries object
+      #* *n* : number of observations
+      #* *k* : order
+      #
+      #==Returns
+      #phi and sigma vectors
       def yule_walker(ts, n, k)
-        #parameters: timeseries, no of observations, order
-        #returns: simulated autoregression with phi parameters and sigma
         phi, sigma = Pacf::Pacf.yule_walker(ts, k)
         return phi, sigma
         #return ar_sim(n, phi, sigma)
       end
 
+      #=Levinson Durbin estimation
+      #Performs levinson durbin estimation on given timeseries, observations and order
+      #==Parameters
+      #
+      #* *ts*: timeseries object
+      #* *n* : number of observations
+      #* *k* : autoregressive order
+      #
+      #==Returns
+      #phi and sigma vectors
       def levinson_durbin(ts, n, k)
-        #parameters;
-        #ts: timseries against which to generate phi coefficients
-        #n: number of observations for simulation
-        #k: order of AR
         intermediate = Pacf::Pacf.levinson_durbin(ts, k)
         phi, sigma = intermediate[1], intermediate[0]
         return phi, sigma
@@ -75,19 +92,20 @@ module Statsample
       #Simulates an autoregressive AR(p) model with specified number of
       #observations(n), with phi number of values for order p and sigma.
       #
-      #*Analysis*:  http://ankurgoel.com/blog/2013/07/20/ar-ma-arma-acf-pacf-visualizations/
+      #==Analysis:
+      # [http://ankurgoel.com/blog/2013/07/20/ar-ma-arma-acf-pacf-visualizations/](http://ankurgoel.com/blog/2013/07/20/ar-ma-arma-acf-pacf-visualizations/)
       #
-      #*Parameters*:
-      #-_n_::integer, number of observations
-      #-_phi_::array of phi values, e.g: [0.35, 0.213] for p = 2
-      #-_sigma_::float, sigma value for error generalization
+      #==Parameters:
+      #* *n*: integer, number of observations
+      #* *phi* :array of phi values, e.g: [0.35, 0.213] for p = 2
+      #* *sigma*: float, sigma value for error generalization
       #
-      #*Usage*:
+      #==Usage
       #  ar = ARIMA.new
       #  ar.ar_sim(1500, [0.3, 0.9], 0.12)
       #    # => AR(2) autoregressive series of 1500 values
       #
-      #*Returns*:
+      #==Returns
       #Array of generated autoregressive series against attributes
       def ar_sim(n, phi, sigma)
         #using random number generator for inclusion of white noise
@@ -122,16 +140,16 @@ module Statsample
       #Simulates a moving average model with specified number of
       #observations(n), with theta values for order k and sigma
       #
-      #*Parameters*:
-      #-_n_::integer, number of observations
-      #-_theta_::array of floats, e.g: [0.23, 0.732], must be < 1
-      #-_sigma_::float, sigma value for whitenoise error
+      #==Parameters
+      #* *n*: integer, number of observations
+      #* *theta*: array of floats, e.g: [0.23, 0.732], must be < 1
+      #* *sigma*: float, sigma value for whitenoise error
       #
-      #*Usage*:
+      #==Usage
       #  ar = ARIMA.new
       #  ar.ma_sim(1500, [0.23, 0.732], 0.27)
       #
-      #*Returns*:
+      #==Returns
       #Array of generated MA(q) model
       def ma_sim(n, theta, sigma)
         #n is number of observations (eg: 1000)
@@ -158,7 +176,7 @@ module Statsample
         x
       end
 
-      #ARMA(Autoregressive and Moving Average) Simulator
+      #=ARMA(Autoregressive and Moving Average) Simulator
       #ARMA is represented by:
       #http://upload.wikimedia.org/math/2/e/d/2ed0485927b4370ae288f1bc1fe2fc8b.png
       #This simulates the ARMA model against p, q and sigma.
@@ -166,19 +184,20 @@ module Statsample
       #If q = 0, then model is pure AR(p),
       #otherwise, model is ARMA(p, q) represented by above.
       #
-      #Detailed analysis: http://ankurgoel.com/blog/2013/07/20/ar-ma-arma-acf-pacf-visualizations/
+      #==Detailed analysis:
+      # [http://ankurgoel.com/blog/2013/07/20/ar-ma-arma-acf-pacf-visualizations/](http://ankurgoel.com/blog/2013/07/20/ar-ma-arma-acf-pacf-visualizations/)
       #
-      #*Parameters*:
-      #-_n_::integer, number of observations
-      #-_p_::array, contains p number of phi values for AR(p) process
-      #-_q_::array, contains q number of theta values for MA(q) process
-      #-_sigma_::float, sigma value for whitenoise error generation
+      #==Parameters
+      #* *n*: integer, number of observations
+      #* *p*: array, contains p number of phi values for AR(p) process
+      #* *q*: array, contains q number of theta values for MA(q) process
+      #* *sigma*: float, sigma value for whitenoise error generation
       #
-      #*Usage*:
+      #==Usage
       #  ar = ARIMA.new
       #  ar.arma_sim(1500, [0.3, 0.272], [0.8, 0.317], 0.92)
       #
-      #*Returns*:
+      #==Returns
       #array of generated ARMA model values
       def arma_sim(n, p, q, sigma)
         #represented by :
