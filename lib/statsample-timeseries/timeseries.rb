@@ -1,4 +1,4 @@
-require 'bio-statsample-timeseries/timeseries/pacf'
+require 'statsample-timeseries/timeseries/pacf'
 module Statsample::TimeSeriesShorthands
   # Creates a new Statsample::TimeSeries object
   # Argument should be equal to TimeSeries.new

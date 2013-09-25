@@ -1,4 +1,4 @@
-require 'statsample'
+require 'statsample-timeseries'
 include Statsample::TimeSeries
 
 #all instance variable and cucumber DSL s DRYed up in step_definitions.rb

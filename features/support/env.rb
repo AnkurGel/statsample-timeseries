@@ -8,7 +8,7 @@ rescue Bundler::BundlerError => e
 end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
-require 'bio-statsample-timeseries'
+require 'statsample-timeseries'
 
 require 'test/unit/assertions'
 

@@ -1,4 +1,4 @@
-require 'bio-statsample-timeseries/arima/likelihood'
+require 'statsample-timeseries/arima/likelihood'
 module Statsample
   module TimeSeries
     module Arima

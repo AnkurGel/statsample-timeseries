@@ -1,4 +1,4 @@
-require 'statsample'
+require 'statsample-timeseries'
 include Statsample::TimeSeries
 
 Given /^the following values in a timeseries:$/ do |series|
