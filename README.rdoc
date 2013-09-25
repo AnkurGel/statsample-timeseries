@@ -1,10 +1,20 @@
-= bio-statsample-timeseries
+= statsample-timeseries
 
 {<img
-src="https://secure.travis-ci.org/AnkurGel/bioruby-statsample-timeseries.png"
-/>}[http://travis-ci.org/#!/AnkurGel/bioruby-statsample-timeseries]
+src="https://secure.travis-ci.org/AnkurGel/statsample-timeseries.png"
+/>}[http://travis-ci.org/#!/AnkurGel/statsample-timeseries]
 
-Statsample-Timeseries is an extension to [Statsample](https://github.com/clbustos/statsample), a suite of advance statistics in Ruby. It incorporates helpful timeseries functions, estimations and modules such as:
+Statsample-Timeseries is an extension to [Statsample](https://github.com/clbustos/statsample), a suite of advance statistics in Ruby. 
+
+* {sciruby.com}[http://sciruby.com]
+* {Google+}[https://plus.google.com/109304769076178160953/posts]
+* {Ankur Goel}[http://ankurgoel.com]
+* {Statsample}[https://github.com/SciRuby/statsample]
+
+
+== Description
+
+Statsample-Timeseries is extension of Statsample, and incorporates helpful timeseries functions, estimations and modules such as:
 
   * ACF
   * PACF
@@ -14,7 +24,8 @@ Statsample-Timeseries is an extension to [Statsample](https://github.com/clbusto
   * Autocovariances 
   * Moving Averages
 
-Note: this software is under active development!
+Statsample-Timeseries was created by Ankur Goel as part of Google's Summer of Code 2013. It is the part of {SciRuby}[http://sciruby.com]
+
 
 == Dependency
 
@@ -23,46 +34,37 @@ Please install [`rb-gsl`](http://rb-gsl.rubyforge.org/) which is a Ruby wrapper 
 
 == Installation
 
-        gem install bio-statsample-timeseries
+        gem install statsample-timeseries
 
 == Usage
 
-== Developers
-
 To use the library 
 
-        require 'bio-statsample-timeseries'
+        require 'statsample-timeseries'
 
-The API doc is online. For more code examples see also the test files in
-the source tree.
+You can also go through the blog-posts on {my blog}[http://ankurgoel.com] for descriptive explanation and examples.
+
+
+== Documentation
+
+The API doc is {online}[http://rubygems.org/gems/statsample-timeseries]. For more code examples see also the test files in the source tree.
 
 
 == Contributing
 
 * Fork the project. 
+* Create your feature branch
 * Add/Modify code. 
-* Write equivalent documentation and **tests**
-* Run `rake test` to verify that all test case passes
+* Write equivalent documentation and **tests**.
+* Run `rake test` to verify that all test case passes.
+* Push your branch.
 * Pull request. :)
         
 == Project home page
 
 Information on the source tree, documentation, issues and how to contribute, see
 
-  http://github.com/AnkurGel/bioruby-statsample-timeseries
-
-The BioRuby community is on IRC server: irc.freenode.org, channel: #bioruby.
-
-== Cite
-
-  If you use this software, please cite one of
- 
-* [BioRuby: bioinformatics software for the Ruby programming language](http://dx.doi.org/10.1093/bioinformatics/btq475)
-* [Biogem: an effective tool-based approach for scaling up open source software development in bioinformatics](http://dx.doi.org/10.1093/bioinformatics/bts080)
-
-== Biogems.info
-
-This Biogem is published at http://biogems.info/index.html#bio-statsample-timeseries
+{http://github.com/AnkurGel/statsample-timeseries}[git@github.com:AnkurGel/statsample-timeseries.git]
 
 == Copyright
 

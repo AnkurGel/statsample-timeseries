@@ -14,9 +14,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "bio-statsample-timeseries"
-  gem.homepage = "http://github.com/AnkurGel/bioruby-statsample-timeseries"
-  gem.license = "MIT"
+  gem.name = "statsample-timeseries"
+  gem.homepage = "http://github.com/AnkurGel/statsample-timeseries"
   gem.summary = %Q{TimeSeries modules for Statsample}
   gem.description = %Q{Statsample-timeseries is an extension to Statsample. It incorporates helpful timeseries functions and modules like ARMA, ARIMA, acf, pacf, lags etc.}
   gem.email = "ankurgel@gmail.com"
@@ -42,7 +41,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "bio-statsample-timeseries #{version}"
+  rdoc.title = "statsample-timeseries #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
