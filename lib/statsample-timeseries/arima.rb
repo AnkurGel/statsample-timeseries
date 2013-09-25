@@ -36,8 +36,12 @@ module Statsample
         if i > 0
           ts = ts.diff(i).reject { |x| x.nil? }.to_ts
         end
-        filter = Arima::KalmanFilter.new(ts, p, i, q)
-        filter
+        if Statsample.has_gsl?
+          filter = Arima::KalmanFilter.new(ts, p, i, q)
+          filter
+        else
+          raise("GSL not available. Install GSL and rb-gsl first")
+        end
       end
 
       def ar(p)

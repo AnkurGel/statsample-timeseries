@@ -18,5 +18,4 @@ group :development do
   gem "bio", ">= 1.4.2"
   gem "rdoc", "~> 3.12"
   gem 'mocha', '~> 0.14.0'
-  gem 'gsl'
 end

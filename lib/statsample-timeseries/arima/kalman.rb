@@ -5,7 +5,7 @@ module Statsample
 
       class KalmanFilter
         include Statsample::TimeSeries
-        include GSL::MultiMin
+        include GSL::MultiMin if Statsample.has_gsl?
 
         #timeseries object
         attr_accessor :ts
