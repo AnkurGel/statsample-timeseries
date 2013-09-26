@@ -4,7 +4,7 @@
 src="https://secure.travis-ci.org/AnkurGel/statsample-timeseries.png"
 />}[http://travis-ci.org/#!/AnkurGel/statsample-timeseries]
 
-Statsample-Timeseries is an extension to [Statsample](https://github.com/clbustos/statsample), a suite of advance statistics in Ruby. 
+Statsample-Timeseries is an extension to {Statsample}[https://github.com/clbustos/statsample], a suite of advance statistics in Ruby. 
 
 * {sciruby.com}[http://sciruby.com]
 * {Google+}[https://plus.google.com/109304769076178160953/posts]
@@ -16,20 +16,20 @@ Statsample-Timeseries is an extension to [Statsample](https://github.com/clbusto
 
 Statsample-Timeseries is extension of Statsample, and incorporates helpful timeseries functions, estimations and modules such as:
 
-  * ACF
-  * PACF
-  * ARIMA
-  * KalmanFilter
-  * LogLikelihood
-  * Autocovariances 
-  * Moving Averages
+* ACF
+* PACF
+* ARIMA
+* KalmanFilter
+* LogLikelihood
+* Autocovariances 
+* Moving Averages
 
-Statsample-Timeseries was created by Ankur Goel as part of Google's Summer of Code 2013. It is the part of {SciRuby}[http://sciruby.com]
+Statsample-Timeseries was created by Ankur Goel as part of Google's Summer of Code 2013. It is part of {SciRuby}[http://sciruby.com].
 
 
 == Dependency
 
-Please install [`rb-gsl`](http://rb-gsl.rubyforge.org/) which is a Ruby wrapper over GNU Scientific Library. It enables us to use various minimization techniques during estimations.
+Please install {gsl-nmatrix}[http://rubygems.org/gems/gsl-nmatrix] which is a Ruby wrapper over GNU Scientific Library. It enables us to use various minimization techniques during estimations.
 
 
 == Installation
@@ -55,7 +55,7 @@ The API doc is {online}[http://rubygems.org/gems/statsample-timeseries]. For mor
 * Fork the project. 
 * Create your feature branch
 * Add/Modify code. 
-* Write equivalent documentation and **tests**.
+* Write equivalent documentation and *tests*.
 * Run `rake test` to verify that all test case passes.
 * Push your branch.
 * Pull request. :)
