@@ -4,7 +4,8 @@
 src="https://secure.travis-ci.org/AnkurGel/statsample-timeseries.png"
 />}[http://travis-ci.org/#!/AnkurGel/statsample-timeseries]
 
-Statsample-Timeseries is an extension to {Statsample}[https://github.com/clbustos/statsample], a suite of advance statistics in Ruby. 
+Statsample-Timeseries is an extension to {Statsample}[https://github.com/clbustos/statsample], a suite for advanced
+statistics with Ruby.
 
 * {sciruby.com}[http://sciruby.com]
 * {Google+}[https://plus.google.com/109304769076178160953/posts]
@@ -14,22 +15,25 @@ Statsample-Timeseries is an extension to {Statsample}[https://github.com/clbusto
 
 == Description
 
-Statsample-Timeseries is extension of Statsample, and incorporates helpful timeseries functions, estimations and modules such as:
+Statsample-Timeseries is extension of Statsample, and incorporates helpful time series functions, estimation techniques,
+and modules, such as:
 
 * ACF
 * PACF
 * ARIMA
-* KalmanFilter
-* LogLikelihood
+* Kalman Filter
+* Log Likelihood
 * Autocovariances 
 * Moving Averages
 
-Statsample-Timeseries was created by Ankur Goel as part of Google's Summer of Code 2013. It is part of {SciRuby}[http://sciruby.com].
+Statsample-Timeseries was created by Ankur Goel as part of Google's Summer of Code 2013. It is part of
+the {SciRuby Project}[http://sciruby.com].
 
 
 == Dependency
 
-Please install {gsl-nmatrix}[http://rubygems.org/gems/gsl-nmatrix] which is a Ruby wrapper over GNU Scientific Library. It enables us to use various minimization techniques during estimations.
+Please install {gsl-nmatrix}[http://rubygems.org/gems/gsl-nmatrix] which is a Ruby wrapper over GNU Scientific Library.
+It enables us to use various minimization techniques during estimations.
 
 
 == Installation
@@ -47,7 +51,8 @@ You can also go through the blog-posts on {my blog}[http://ankurgoel.com] for de
 
 == Documentation
 
-The API doc is {online}[http://rubygems.org/gems/statsample-timeseries]. For more code examples see also the test files in the source tree.
+The API doc is {online}[http://rubygems.org/gems/statsample-timeseries]. For more code examples see also the test files
+in the source tree.
 
 
 == Contributing
@@ -56,17 +61,19 @@ The API doc is {online}[http://rubygems.org/gems/statsample-timeseries]. For mor
 * Create your feature branch
 * Add/Modify code. 
 * Write equivalent documentation and *tests*.
-* Run `rake test` to verify that all test case passes.
+* Run `rake test` to verify that all tests pass.
 * Push your branch.
 * Pull request. :)
         
 == Project home page
 
-Information on the source tree, documentation, issues and how to contribute, see
+For information on the source tree, documentation, issues and how to contribute, see
 
-{http://github.com/AnkurGel/statsample-timeseries}[git@github.com:AnkurGel/statsample-timeseries.git]
+{http://github.com/SciRuby/statsample-timeseries}[git@github.com:SciRuby/statsample-timeseries.git]
 
 == Copyright
 
-Copyright (c) 2013 Ankur Goel. See LICENSE.txt for further details.
+Copyright (c) 2013 Ankur Goel and the Ruby Science Foundation. See LICENSE.txt for further details.
+
+Statsample is (c) 2009-2013 Claudio Bustos and the Ruby Science Foundation.
 
