@@ -1,8 +1,8 @@
 = statsample-timeseries
 
 {<img
-src="https://secure.travis-ci.org/AnkurGel/statsample-timeseries.png"
-/>}[http://travis-ci.org/#!/AnkurGel/statsample-timeseries]
+src="https://secure.travis-ci.org/SciRuby/statsample-timeseries.png"
+/>}[http://travis-ci.org/#!/SciRuby/statsample-timeseries]
 
 Statsample-Timeseries is an extension to {Statsample}[https://github.com/clbustos/statsample], a suite for advanced
 statistics with Ruby.
