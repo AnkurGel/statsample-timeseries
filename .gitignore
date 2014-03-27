@@ -49,4 +49,3 @@ pkg
 #*.rbc
 # Ignore Gemfile.lock for gems. See http://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/
 Gemfile.lock
-*.gemspec
