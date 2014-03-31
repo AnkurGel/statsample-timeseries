@@ -1,4 +1,3 @@
-#require 'debugger'
 require 'statsample-timeseries/arima/kalman'
 require 'statsample-timeseries/arima/likelihood'
 module Statsample
