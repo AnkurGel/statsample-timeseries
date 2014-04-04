@@ -23,7 +23,7 @@ and modules, such as:
 * ARIMA
 * Kalman Filter
 * Log Likelihood
-* Autocovariances 
+* Autocovariances
 * Moving Averages
 
 Statsample-Timeseries was created by Ankur Goel as part of Google's Summer of Code 2013. It is part of
@@ -42,7 +42,7 @@ It enables us to use various minimization techniques during estimations.
 
 == Usage
 
-To use the library 
+To use the library
 
         require 'statsample-timeseries'
 
@@ -57,14 +57,14 @@ in the source tree.
 
 == Contributing
 
-* Fork the project. 
+* Fork the project.
 * Create your feature branch
-* Add/Modify code. 
+* Add/Modify code.
 * Write equivalent documentation and *tests*.
 * Run `rake test` to verify that all tests pass.
 * Push your branch.
 * Pull request. :)
-        
+
 == Project home page
 
 For information on the source tree, documentation, issues and how to contribute, see
@@ -76,4 +76,3 @@ For information on the source tree, documentation, issues and how to contribute,
 Copyright (c) 2013 Ankur Goel and the Ruby Science Foundation. See LICENSE.txt for further details.
 
 Statsample is (c) 2009-2013 Claudio Bustos and the Ruby Science Foundation.
-
