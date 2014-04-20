@@ -16,7 +16,8 @@ desc "Open IRB with statsample-timeseries loaded."
 task :console do
   require 'irb'
   require 'irb/completion'
-  require 'measurable'
+  $:.unshift File.expand_path("../lib", __FILE__)
+  require 'statsample-timeseries'
   ARGV.clear
   IRB.start
 end
