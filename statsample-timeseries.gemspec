@@ -20,12 +20,11 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'statsample', '1.2.0'
 
-  spec.add_development_dependency 'bio', '~> 1.4'
-  spec.add_development_dependency 'bundler', '>= 1.0.21'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'cucumber', '>= 0'
   spec.add_development_dependency 'minitest', '~> 4.7'
   spec.add_development_dependency 'mocha', '~> 0.14'
-  spec.add_development_dependency 'jeweler', '~> 1.8.4'
   spec.add_development_dependency 'rdoc', '~> 3.12'
   spec.add_development_dependency 'shoulda', '>= 0'
 end

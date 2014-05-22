@@ -1,6 +1,8 @@
 # encoding: utf-8
+require 'rake'
+require 'bundler/gem_tasks'
 
-require 'rubygems'
+# Setup the necessary gems, specified in the gemspec.
 require 'bundler'
 begin
   Bundler.setup(:default, :development)
@@ -9,7 +11,16 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'rake'
+
+desc "Open IRB with statsample-timeseries loaded."
+task :console do
+  require 'irb'
+  require 'irb/completion'
+  $:.unshift File.expand_path("../lib", __FILE__)
+  require 'statsample-timeseries'
+  ARGV.clear
+  IRB.start
+end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|

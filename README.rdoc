@@ -4,7 +4,7 @@
 src="https://secure.travis-ci.org/SciRuby/statsample-timeseries.png"
 />}[http://travis-ci.org/#!/SciRuby/statsample-timeseries]
 
-Statsample-Timeseries is an extension to {Statsample}[https://github.com/clbustos/statsample], a suite for advanced
+Statsample-Timeseries is an extension to {Statsample}[https://github.com/sciruby/statsample], a suite for advanced
 statistics with Ruby.
 
 * {sciruby.com}[http://sciruby.com]
