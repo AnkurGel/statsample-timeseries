@@ -5,13 +5,17 @@ class StatsampleWaldTest < MiniTest::Unit::TestCase
   # degree of freedom. It is extremely useful to test fit the fit of
   # an ARIMA model to test the residuals.
 
-  include Statsample::TimeSeries
   include Statsample::Shorthand
   include Distribution
 
   def setup
     #create time series to evaluate later
-    @wald = 100.times.map { rand(100) }.to_ts
+    Daru.lazy_update = true
+    @wald = Daru::Vector.new(100.times.map { rand(100) })
+  end
+
+  def teardown
+    Daru.lazy_update = false
   end
 
   def sum_of_squares_of_acf_series(lags)

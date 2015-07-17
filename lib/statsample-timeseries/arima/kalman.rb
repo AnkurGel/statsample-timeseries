@@ -77,14 +77,7 @@ module Statsample
             rescue
               break
             end
-          #  printf("%5d ", iter)
-          #  for i in 0...np do
-          #    puts "#{x[i]}.to_f"
-          #    #printf("%10.3e ", x[i].to_f)
-          #  end
-          #  printf("f() = %7.3f size = %.3f\n", minimizer.fval, minimizer.size)
           end
-          #
           @ar = (p > 0) ? x.to_a[0...p] : []
           @ma = (q > 0) ? x.to_a[p...(p+q)] : []
           x.to_a

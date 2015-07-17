@@ -1,14 +1,14 @@
 module Statsample
   module TimeSeries
     module Pacf
-      class Pacf
-
-        def self.pacf_yw(timeseries, max_lags, method = 'yw')
+      class << self
+        def pacf_yw(timeseries, max_lags, method = 'yw')
           #partial autocorrelation by yule walker equations.
           #Inspiration: StatsModels
           pacf = [1.0]
+          arr = timeseries.to_a
           (1..max_lags).map do |i|
-            pacf << yule_walker(timeseries, i, method)[0][-1]
+            pacf << yule_walker(arr, i, method)[0][-1]
           end
           pacf
         end
@@ -25,7 +25,10 @@ module Statsample
         #* *arcoefs*: AR coefficients
         #* *pacf*: pacf function
         #* *sigma*: some function
-        def self.levinson_durbin(series, nlags = 10, is_acovf = false)
+        def levinson_durbin(series, nlags = 10, is_acovf = false)
+          # TODO: Make this thread safe
+          prev_lazy_value = Daru.lazy_update
+          Daru.lazy_update = true
 
           if is_acovf
             series = series.map(&:to_f)
@@ -57,32 +60,38 @@ module Statsample
           arcoefs = arcoefs_delta[1..arcoefs_delta.size]
           pacf = diag(phi)
           pacf[0] = 1.0
+          Daru.lazy_update = prev_lazy_value
           return [sigma_v, arcoefs, pacf, sig, phi]
         end
 
-        #Returns diagonal elements of matrices
-        # Will later abstract it to utilities
-        def self.diag(mat)
+        # Returns diagonal elements of matrices
+        def diag(mat)
           return mat.each_with_index(:diagonal).map { |x, r, c| x }
         end
 
 
         #=Yule Walker Algorithm
-        #From the series, estimates AR(p)(autoregressive) parameter using Yule-Waler equation. See -
-        #http://en.wikipedia.org/wiki/Autoregressive_moving_average_model
         #
-        #==Parameters
+        # From the series, estimates AR(p)(autoregressive) parameter using 
+        # Yule-Waler equation. See -
+        # http://en.wikipedia.org/wiki/Autoregressive_moving_average_model
+        #
+        # == Parameters
+        #
         #* *ts*: timeseries
         #* *k*: order, default = 1
         #* *method*: can be 'yw' or 'mle'. If 'yw' then it is unbiased, denominator is (n - k)
         #
-        #==Returns
+        # == Returns
+        #
         #* *rho*: autoregressive coefficients
         #* *sigma*: sigma parameter
-        def self.yule_walker(ts, k = 1, method='yw')
-          ts = ts - ts.mean
+        def yule_walker(ts, k = 1, method='yw')
           n = ts.size
-          if method.downcase.eql? 'yw'
+          mean = (ts.inject(:+) / n)
+          ts.map! { |t| t - mean }
+
+          if method == 'yw'
             #unbiased => denominator = (n - k)
             denom =->(k) { n - k }
           else
@@ -94,7 +103,7 @@ module Statsample
           r[0] = ts.map { |x| x**2 }.inject(:+).to_f / denom.call(0).to_f
 
           1.upto(k) do |l|
-            r[l] = (ts[0...-l].zip(ts[l...ts.size])).map do |x|
+            r[l] = (ts[0..(-l - 1)].zip(ts[l..(ts.size - 1)])).map do |x|
               x.inject(:*)
             end.inject(:+).to_f / denom.call(l).to_f
           end
@@ -103,27 +112,32 @@ module Statsample
 
           mat = Matrix.columns(r_R).inverse()
           phi = solve_matrix(mat, r[1..r.size])
-          phi_vector = Statsample::Vector.new(phi, :scale)
-          r_vector = Statsample::Vector.new(r[1..r.size], :scale)
+          phi_vector = Daru::Vector.new(phi)
+          r_vector = Daru::Vector.new(r[1..r.size])
           sigma = r[0] - (r_vector * phi_vector).sum
           return [phi, sigma]
         end
 
         #=ToEplitz
-        # Generates teoeplitz matrix from an array
-        #http://en.wikipedia.org/wiki/Toeplitz_matrix
-        #Toeplitz matrix are equal when they are stored in row & column major
-        #==Parameters
+        #
+        # Generates teoeplitz matrix from an array 
+        # http://en.wikipedia.org/wiki/Toeplitz_matrix.
+        # Toeplitz matrix are equal when they are stored in row & column major
+        #
+        # == Parameters
+        #
         #* *arr*: array of integers;
-        #==Usage
-        #  arr = [0,1,2,3]
-        #  Pacf.toeplitz(arr)
-        #==Returns
-        # [[0, 1, 2, 3],
-        #  [1, 0, 1, 2],
-        #  [2, 1, 0, 1],
-        #  [3, 2, 1, 0]]
-        def self.toeplitz(arr)
+        #
+        # == Usage
+        #
+        #   arr = [0,1,2,3]
+        #   Pacf.toeplitz(arr)
+        #
+        #   #=>  [[0, 1, 2, 3],
+        #   #=>   [1, 0, 1, 2],
+        #   #=>   [2, 1, 0, 1],
+        #   #=>   [3, 2, 1, 0]]
+        def toeplitz(arr)
           eplitz_matrix = Array.new(arr.size) { Array.new(arr.size) }
 
           0.upto(arr.size - 1) do |i|
@@ -143,9 +157,10 @@ module Statsample
           eplitz_matrix
         end
 
-        #===Solves matrix equations
-        #Solves for X in AX = B
-        def self.solve_matrix(matrix, out_vector)
+        #=Solves matrix equations
+        #
+        # Solves for X in AX = B
+        def solve_matrix(matrix, out_vector)
           solution_vector = Array.new(out_vector.size, 0)
           matrix = matrix.to_a
           k = 0
@@ -157,7 +172,6 @@ module Statsample
           end
           solution_vector
         end
-
       end
     end
   end

@@ -10,6 +10,8 @@ require 'minitest/unit'
 require 'shoulda'
 require 'shoulda-context'
 require 'mocha/setup'
+require 'minitest/profile'
+require 'awesome_print'
 
 #require 'statsample-timeseries'
 

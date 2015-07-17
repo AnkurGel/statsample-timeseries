@@ -5,7 +5,12 @@ class StatsampleTimeSeriesPacfTestCase < MiniTest::Unit::TestCase
     include Statsample::TimeSeries
 
     setup do
-      @timeseries = (1..20).map { |e| e * 10 }.to_ts
+      Daru.lazy_update = true
+      @timeseries = Daru::Vector.new((1..20).map { |e| e * 10 })
+    end
+
+    teardown do
+      Daru.lazy_update = false
     end
 
     should "cross-check ACF for 10 lags" do

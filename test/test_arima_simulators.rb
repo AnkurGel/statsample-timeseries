@@ -1,18 +1,26 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
 
 class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
+  def setup
+    Daru.lazy_update = true  
+  end
+
+  def teardown
+    Daru.lazy_update = false
+  end
+
   def generate_acf(simulation)
-    ts = simulation.to_ts
+    ts = Daru::Vector.new(simulation)
     ts.acf
   end
 
   def generate_pacf(simulation)
-    ts = simulation.to_ts
+    ts = Daru::Vector.new(simulation)
     ts.pacf
   end
+
   context("AR(1) simulations") do
     include Statsample
-
     setup do
       @series = TimeSeries.arima
       @ar_1_positive = @series.ar_sim(1500, [0.9], 2)
@@ -76,15 +84,18 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
     include Statsample
 
     setup do
+      Daru.lazy_update = true
       @series = TimeSeries.arima
       @ar_p_positive = @series.ar_sim(1500, [0.3, 0.5], 2)
       @ar_p_negative = @series.ar_sim(1500, [-0.3, -0.5], 2)
     end
 
+    teardown do
+      Daru.lazy_update = false
+    end
 
     should "have damped sine wave starting on positive side on acf" do
-      @ar = @ar_p_positive
-      @acf = generate_acf(@ar)
+      @acf = generate_acf(@ar_p_positive)
       assert_operator @acf[0], :>=, @acf[1]
       assert_operator @acf[1], :>=, 0.0
       #caution: sine curve can split on cartesian plane,
@@ -93,8 +104,7 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
     end
 
     should "have damped sine wave starting on negative side on acf" do
-      @ar = @ar_p_negative
-      @acf = generate_acf(@ar)
+      @acf = generate_acf(@ar_p_negative)
       assert_operator @acf[0], :>=, @acf[1]
       assert_operator @acf[1], :<=, 0.0
       assert_operator @acf[1], :>=, @acf[2]
@@ -105,8 +115,7 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
 
     should "have spikes from 1 to p for pacf" do
       #here p = 2
-      @ar = @ar_p_positive
-      @pacf = generate_pacf(@ar)
+      @pacf = generate_pacf(@ar_p_positive)
       assert_equal @pacf[0], 1.0
       assert_operator @pacf[1], :>, @pacf[3]
       assert_operator @pacf[1], :>, @pacf[4]
@@ -149,7 +158,6 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
       #positive_vs_negative:
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/MA%281%29_acf_positive_vs_negative.png
     end
-
   end
 
   context("MA(q) simulations") do
@@ -177,10 +185,11 @@ class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
     include Statsample
 
     setup do
-      @timeseries = 100.times.map { rand }.to_ts
+      @timeseries = Daru::Vector.new(100.times.map { rand })
       @arma_simulation =->(n) { @timeseries.ar(n, k)}
     end
-    #to write test
+    
+    # TODO: write tests
   end
 end
 

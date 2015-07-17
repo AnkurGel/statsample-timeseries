@@ -26,7 +26,7 @@ module Statsample
           #iteratively minimized by simplex algorithm via KalmanFilter.ks
           #Not meant to be used directly. Will make it private later.
           def ll
-            params, timeseries = @params, @timeseries
+            params, timeseries = @params, @timeseries.to_a
             p, q = @p, @q
 
             phi = []
@@ -66,7 +66,6 @@ module Statsample
 
             n.times do |i|
               v_t[i] = (z * a_t).map { |x| timeseries[i] - x }[0,0]
-
               f_t[i] = (z * p_t * (z.transpose)).map { |x| x + 1 }[0,0]
 
               k_t = ((t * p_t * z.transpose) + h).map { |x| x / f_t[i] }
