@@ -3,4 +3,4 @@ gemspec
 
 gem 'minitest-profile'
 
-gem 'daru', :path => '/home/sameer/gitrepos/daru/'
+gem 'daru', :github => 'v0dro/daru', :branch => 'tseries'
