@@ -26,10 +26,6 @@ module Statsample
         #* *pacf*: pacf function
         #* *sigma*: some function
         def levinson_durbin(series, nlags = 10, is_acovf = false)
-          # TODO: Make this thread safe
-          prev_lazy_value = Daru.lazy_update
-          Daru.lazy_update = true
-
           if is_acovf
             series = series.map(&:to_f)
           else
@@ -60,7 +56,6 @@ module Statsample
           arcoefs = arcoefs_delta[1..arcoefs_delta.size]
           pacf = diag(phi)
           pacf[0] = 1.0
-          Daru.lazy_update = prev_lazy_value
           return [sigma_v, arcoefs, pacf, sig, phi]
         end
 
@@ -89,7 +84,7 @@ module Statsample
         def yule_walker(ts, k = 1, method='yw')
           n = ts.size
           mean = (ts.inject(:+) / n)
-          ts.map! { |t| t - mean }
+          ts = ts.map { |t| t - mean }
 
           if method == 'yw'
             #unbiased => denominator = (n - k)
@@ -103,18 +98,18 @@ module Statsample
           r[0] = ts.map { |x| x**2 }.inject(:+).to_f / denom.call(0).to_f
 
           1.upto(k) do |l|
-            r[l] = (ts[0..(-l - 1)].zip(ts[l..(ts.size - 1)])).map do |x|
+            r[l] = (ts[0...-l].zip(ts[l...n])).map do |x|
               x.inject(:*)
             end.inject(:+).to_f / denom.call(l).to_f
           end
 
           r_R = toeplitz(r[0...-1])
 
-          mat = Matrix.columns(r_R).inverse()
+          mat = Matrix.columns(r_R).inverse
           phi = solve_matrix(mat, r[1..r.size])
-          phi_vector = Daru::Vector.new(phi)
-          r_vector = Daru::Vector.new(r[1..r.size])
-          sigma = r[0] - (r_vector * phi_vector).sum
+          phi_vector = phi
+          r_vector = r[1..-1]
+          sigma = r[0] - (r_vector.map.with_index {|e,i| e*phi_vector[i] }).inject(:+)
           return [phi, sigma]
         end
 

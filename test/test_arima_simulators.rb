@@ -2,7 +2,7 @@ require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
 
 class StatsampleArimaSimulatorsTest < MiniTest::Test
   def setup
-    Daru.lazy_update = true  
+    Daru.lazy_update = true
   end
 
   def teardown
@@ -21,59 +21,68 @@ class StatsampleArimaSimulatorsTest < MiniTest::Test
 
   context("AR(1) simulations") do
     include Statsample
-    setup do
-      @series = TimeSeries.arima
-      @ar_1_positive = @series.ar_sim(1500, [0.9], 2)
-      @ar_1_negative = @series.ar_sim(1500, [-0.9], 2)
-
-      #generating acf
-      @positive_acf = generate_acf(@ar_1_positive)
-      @negative_acf = generate_acf(@ar_1_negative)
-
-      #generating pacf
-      @positive_pacf = generate_pacf(@ar_1_positive)
-      @negative_pacf = generate_pacf(@ar_1_negative)
+    def self.generate_acf(simulation)
+      ts = Daru::Vector.new(simulation)
+      ts.acf
     end
+
+    def self.generate_pacf(simulation)
+      ts = Daru::Vector.new(simulation)
+      ts.pacf
+    end
+
+    # TODO: Try to speed this up.
+    @@series = TimeSeries.arima
+    @@ar_1_positive = @@series.ar_sim(1500, [0.9], 2)
+    @@ar_1_negative = @@series.ar_sim(1500, [-0.9], 2)
+
+    #generating acf
+    @@positive_acf = generate_acf(@@ar_1_positive)
+    @@negative_acf = generate_acf(@@ar_1_negative)
+
+    #generating pacf
+    @@positive_pacf = generate_pacf(@@ar_1_positive)
+    @@negative_pacf = generate_pacf(@@ar_1_negative)
 
 
     should "have exponential decay of acf on positive side with phi > 0" do
-      @acf = @positive_acf
-      assert_equal @acf[0], 1.0
-      assert_operator @acf[1], :>=, 0.7
-      assert_operator @acf[@acf.size - 1], :<=, 0.2
+      acf = @@positive_acf
+      assert_equal acf[0], 1.0
+      assert_operator acf[1], :>=, 0.7
+      assert_operator acf[acf.size - 1], :<=, 0.2
       #visualization:
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_positive_phi_acf.png
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_positive_phi_acf_line.png
     end
 
     should "have series with alternating sign on acf starting on negative side with phi < 0" do
-      @acf = @negative_acf
-      assert_equal @acf[0], 1.0
+      acf = @@negative_acf
+      assert_equal acf[0], 1.0
       #testing for alternating series
-      assert_operator @acf[1], :<, 0
-      assert_operator @acf[2], :>, 0
-      assert_operator @acf[3], :<, 0
-      assert_operator @acf[4], :>, 0
+      assert_operator acf[1], :<, 0
+      assert_operator acf[2], :>, 0
+      assert_operator acf[3], :<, 0
+      assert_operator acf[4], :>, 0
       #visualization:
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_negative_phi_acf.png
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_negative_phi_acf_line.png
     end
 
     should "have positive spike on pacf at lag 1 for phi > 0" do
-      @pacf = @positive_pacf
-      assert_operator @pacf[1], :>=, 0.7
-      assert_operator @pacf[2], :<=, 0.2
-      assert_operator @pacf[3], :<=, 0.14
+      pacf = @@positive_pacf
+      assert_operator pacf[1], :>=, 0.7
+      assert_operator pacf[2], :<=, 0.2
+      assert_operator pacf[3], :<=, 0.14
       #visualization:
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_postive_phi_pacf.png
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_postive_phi_pacf_line.png
     end
 
     should "have negative spike on pacf at lag 1 for phi < 0" do
-      @pacf = @negative_pacf
-      assert_operator @pacf[1], :<=, 0
-      assert_operator @pacf[1], :<=, -0.5
-      assert_operator @pacf[2], :>=, -0.5
+      pacf = @@negative_pacf
+      assert_operator pacf[1], :<=, 0
+      assert_operator pacf[1], :<=, -0.5
+      assert_operator pacf[2], :>=, -0.5
       #visualizaton:
       #https://dl.dropboxusercontent.com/u/102071534/sciruby/AR%281%29_negative_phi_pacf.png
       #[hided @pacf[0] = 1 to convey accurate picture]
@@ -82,7 +91,6 @@ class StatsampleArimaSimulatorsTest < MiniTest::Test
 
   context("AR(p) simulations") do
     include Statsample
-
     setup do
       Daru.lazy_update = true
       @series = TimeSeries.arima

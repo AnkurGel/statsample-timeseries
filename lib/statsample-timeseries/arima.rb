@@ -144,7 +144,7 @@ module Statsample
       #Simulates a moving average model with specified number of
       #observations(n), with theta values for order k and sigma
       #
-      #==Parameters
+      # == Parameters
       #* *n*: integer, number of observations
       #* *theta*: array of floats, e.g: [0.23, 0.732], must be < 1
       #* *sigma*: float, sigma value for whitenoise error

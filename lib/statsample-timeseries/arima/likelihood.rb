@@ -16,7 +16,7 @@ module Statsample
 
           def initialize(params, timeseries, p, q)
             @params = params
-            @timeseries = timeseries
+            @timeseries = timeseries.to_a
             @p = p
             @q = q
             ll
@@ -26,7 +26,7 @@ module Statsample
           #iteratively minimized by simplex algorithm via KalmanFilter.ks
           #Not meant to be used directly. Will make it private later.
           def ll
-            params, timeseries = @params, @timeseries.to_a
+            params, timeseries = @params, @timeseries
             p, q = @p, @q
 
             phi = []
@@ -50,7 +50,7 @@ module Statsample
             t = Matrix.zero(m)
             #set_column is available in utility.rb
             t = t.set_column(0, phi)
-            if(m > 1)
+            if m > 1
               t[0...(m-1), 1...m] = Matrix.I(m-1)
               #chances of extra constant 0 values as unbalanced column, so:
               t = Matrix.columns(t.column_vectors)
