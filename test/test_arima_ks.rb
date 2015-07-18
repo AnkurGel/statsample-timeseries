@@ -1,6 +1,6 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
 
-class StatsampleArimaKSTestCase < MiniTest::Unit::TestCase
+class StatsampleArimaKSTestCase < MiniTest::Test
 
   context("AR(0.5) simulation") do
     #include Statsample::TimeSeries

@@ -22,7 +22,7 @@ module Statsample
         attr_reader :ma
 
         #Creates a new KalmanFilter object and computes the likelihood
-        def initialize(ts=[].to_ts, p=0, i=0, q=0)
+        def initialize(ts=[], p=0, i=0, q=0)
           @ts = ts
           @p = p
           @i = i

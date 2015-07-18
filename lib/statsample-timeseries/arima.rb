@@ -33,7 +33,7 @@ module Statsample
       def self.ks(ts, p, i, q)
         #prototype
         if i > 0
-          ts = ts.diff(i).reject { |x| x.nil? }.to_ts
+          ts = ts.diff(i).reject { |x| x.nil? }
         end
         if Statsample.has_gsl?
           filter = Arima::KalmanFilter.new(ts, p, i, q)

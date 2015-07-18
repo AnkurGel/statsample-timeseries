@@ -1,6 +1,6 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
 
-class StatsampleArimaSimulatorsTest < MiniTest::Unit::TestCase
+class StatsampleArimaSimulatorsTest < MiniTest::Test
   def setup
     Daru.lazy_update = true  
   end

@@ -1,6 +1,6 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
 
-class StatsampleWaldTest < MiniTest::Unit::TestCase
+class StatsampleWaldTest < MiniTest::Test
   # Wald test is useful to test a series of n acf with Chi-square
   # degree of freedom. It is extremely useful to test fit the fit of
   # an ARIMA model to test the residuals.

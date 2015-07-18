@@ -1,5 +1,5 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
-class StatsampleMatrixTestCase < MiniTest::Unit::TestCase
+class StatsampleMatrixTestCase < MiniTest::Test
 
   def setup_square_matrix(arr, n)
     #returns n * n matrix by slicing arr

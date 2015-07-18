@@ -1,5 +1,5 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
-class StatsampleTimeSeriesPacfTestCase < MiniTest::Unit::TestCase
+class StatsampleTimeSeriesPacfTestCase < MiniTest::Test
   context(Statsample::TimeSeries) do
     include Statsample::TimeSeries
     setup do
