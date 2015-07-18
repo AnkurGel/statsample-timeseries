@@ -54,7 +54,7 @@ module Statsample
       # Converts a linear array into a Daru vector
       #== Parameters
       #
-      #* *arr*: Array which has to be converted in Statsample vector
+      #* *arr*: Array which has to be converted to Daru vector
       def create_vector(arr)
         Daru::Vector.new(arr)
       end

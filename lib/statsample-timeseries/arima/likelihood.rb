@@ -68,7 +68,7 @@ module Statsample
               v_t[i] = (z * a_t).map { |x| timeseries[i] - x }[0,0]
               f_t[i] = (z * p_t * (z.transpose)).map { |x| x + 1 }[0,0]
 
-              k_t = ((t * p_t * z.transpose) + h).map { |x| x / f_t[i] }
+              k_t = ((t * p_t * z.transpose) + h).map { |x| x.quo f_t[i] }
 
               a_t = (t * a_t) + (k_t * v_t[i])
               l_t = t - k_t * z

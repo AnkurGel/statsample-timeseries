@@ -18,14 +18,17 @@ class StatsampleArimaKSTestCase < MiniTest::Test
         setup do
           @kf=Statsample::TimeSeries::ARIMA.ks(@s,1,0,0)
         end
+
         should "return correct object" do
           assert_instance_of Statsample::TimeSeries::Arima::KalmanFilter, @kf
         end
+
         should "return correct parameters" do
           assert_equal @kf.p,1
           assert_equal @kf.q,0
           assert_equal @kf.i,0
         end
+
         should "return correct ar estimators" do
           assert_equal @kf.ar.length,1
           assert_in_delta @kf.ar[0], 0.700 #0.564
@@ -37,7 +40,8 @@ class StatsampleArimaKSTestCase < MiniTest::Test
     end
     context "passed through the Kalman Filter with AR(0.564)" do
       setup do
-        @kf_likehood=Statsample::TimeSeries::Arima::KalmanFilter.log_likelihood([0.564],@s,1,0)
+        @kf_likehood = Statsample::TimeSeries::Arima::KalmanFilter.
+          log_likelihood([0.564],@s,1,0)
       end
       
       should "return correct object for log_likehood" do
@@ -90,7 +94,7 @@ class StatsampleArimaKSTestCase < MiniTest::Test
         should "return correct AR estimators" do
           assert_equal @kf.ar.length, 2
           assert_in_delta @kf.ar[0], 0.46, 0.01
-          assert_in_delta @kf.ar[1], 0.016, 0.01
+          assert_in_delta @kf.ar[1], -0.22, 0.01
         end
 
         should "return correct ma estimators" do
@@ -107,7 +111,7 @@ class StatsampleArimaKSTestCase < MiniTest::Test
       end
 
       should "return correct log likelihood" do
-        assert_in_delta -149.55, @ll.log_likelihood, 0.01
+        assert_in_delta -148.22, @ll.log_likelihood, 0.01
       end
 
       should "return correct sigma" do
@@ -115,7 +119,7 @@ class StatsampleArimaKSTestCase < MiniTest::Test
       end
 
       should "return correct AIC value" do
-        assert_in_delta 307.11, @ll.aic, 0.01
+        assert_in_delta 304.44, @ll.aic, 0.01
       end
     end
   end
