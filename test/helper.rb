@@ -6,10 +6,12 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'shoulda'
 require 'shoulda-context'
 require 'mocha/setup'
+require 'minitest/profile'
+require 'awesome_print'
 
 #require 'statsample-timeseries'
 
@@ -17,8 +19,8 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'statsample-timeseries'
 module MiniTest
-  class Unit
-    class TestCase
+  # class Unit
+    class Test
     include Shoulda::Context::Assertions
     include Shoulda::Context::InstanceMethods
     extend Shoulda::Context::ClassMethods
@@ -32,7 +34,7 @@ module MiniTest
         end
       end
     end
-  end
+  # end
 
   module Assertions
     alias :assert_raise :assert_raises unless method_defined? :assert_raise
@@ -54,4 +56,4 @@ module MiniTest
   end
 end
 
-MiniTest::Unit.autorun
+MiniTest.autorun

@@ -8,7 +8,7 @@ module Statsample
         include GSL::MultiMin if Statsample.has_gsl?
 
         #timeseries object
-        attr_accessor :ts
+        attr_writer :ts
         #Autoregressive order
         attr_accessor :p
         #Integerated part order
@@ -22,12 +22,16 @@ module Statsample
         attr_reader :ma
 
         #Creates a new KalmanFilter object and computes the likelihood
-        def initialize(ts=[].to_ts, p=0, i=0, q=0)
-          @ts = ts
+        def initialize(ts=[], p=0, i=0, q=0)
+          @ts = ts.to_a
           @p = p
           @i = i
           @q = q
           ks #call the filter
+        end
+
+        def ts
+          Daru::Vector.new(@ts)
         end
 
         def to_s
@@ -54,7 +58,7 @@ module Statsample
             p,q = params[1], params[2]
             params = x
             #puts x
-            -Arima::KF::LogLikelihood.new(x.to_a, timeseries, p, q).ll
+            -Arima::KF::LogLikelihood.new(x.to_a, timeseries, p, q).log_likelihood
             #KalmanFilter.ll(x.to_a, timeseries, p, q)
           }
           np = @p + @q
@@ -71,20 +75,13 @@ module Statsample
           while status == GSL::CONTINUE && iter < 100
             iter += 1
             begin
-              status = minimizer.iterate()
+              status = minimizer.iterate
               status = minimizer.test_size(1e-2)
               x = minimizer.x
             rescue
               break
             end
-          #  printf("%5d ", iter)
-          #  for i in 0...np do
-          #    puts "#{x[i]}.to_f"
-          #    #printf("%10.3e ", x[i].to_f)
-          #  end
-          #  printf("f() = %7.3f size = %.3f\n", minimizer.fval, minimizer.size)
           end
-          #
           @ar = (p > 0) ? x.to_a[0...p] : []
           @ma = (q > 0) ? x.to_a[p...(p+q)] : []
           x.to_a
@@ -112,36 +109,19 @@ module Statsample
           Arima::KF::LogLikelihood.new(params, timeseries, p, q)
         end
 
-        #=T
-        #The coefficient matrix for the state vector in state equation
-        # It's dimensions is r+k x r+k
-        #==Parameters
-        #* *r*: integer, r is max(p, q+1), where p and q are orders of AR and MA respectively
-        #* *k*: integer, number of exogeneous variables in ARMA model
-        #* *q*: integer, The AR coefficient of ARMA model
 
-        #==References Statsmodels tsa, Durbin and Koopman Section 4.7
-        #def self.T(r, k, p)
-        #  arr = Matrix.zero(r)
-        #  params_padded  = Statsample::Vector.new(Array.new(r, 0), :scale)
-        #
-        #  params_padded[0...p] = params[k...(p+k)]
-        #  intermediate_matrix = (r-1).times.map { Array.new(r, 0) }
-        #  #appending an array filled with padded values in beginning
-        #  intermediate_matrix[0,0] = [params_padded]
-        #
-        #  #now generating column matrix for that:
-        #  arr = Matrix.columns(intermediate_matrix)
-        #  arr_00 = arr[0,0]
-        #
-        #  #identify matrix substituition in matrix except row[0] and column[0]
-        #  r.times do |i|
-        #    arr[r,r] = 1
-        #  end
-        #  arr[0,0] = arr_00
-        #  arr
-        #end
+        def self.T(r, k, p)
+          #=T
+          #The coefficient matrix for the state vector in state equation
+          # It's dimensions is r+k x r+k
+          #==Parameters
+          #* *r*: integer, r is max(p, q+1), where p and q are orders of AR and MA respectively
+          #* *k*: integer, number of exogeneous variables in ARMA model
+          #* *q*: integer, The AR coefficient of ARMA model
 
+          #==References Statsmodels tsa, Durbin and Koopman Section 4.7
+          raise NotImplementedError
+        end
       end
     end
   end

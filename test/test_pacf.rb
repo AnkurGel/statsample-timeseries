@@ -1,11 +1,16 @@
 require(File.expand_path(File.dirname(__FILE__)+'/helper.rb'))
-class StatsampleTimeSeriesPacfTestCase < MiniTest::Unit::TestCase
+class StatsampleTimeSeriesPacfTestCase < MiniTest::Test
   context(Statsample::TimeSeries) do
     include Statsample::TimeSeries
     setup do
-      @ts = (1..20).map { |x| x * 10 }.to_ts
+      Daru.lazy_update = true
+      @ts = Daru::Vector.new((1..20).map { |x| x * 10 })
       #setting up a proc to get a closure for pacf calling with variable lags and methods
       @pacf_proc =->(k, method) { @ts.pacf(k, method) }
+    end
+
+    teardown do
+      Daru.lazy_update = false
     end
 
     should "return correct correct pacf size for lags = 5" do

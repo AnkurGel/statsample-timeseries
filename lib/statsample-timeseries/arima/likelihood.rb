@@ -16,7 +16,7 @@ module Statsample
 
           def initialize(params, timeseries, p, q)
             @params = params
-            @timeseries = timeseries
+            @timeseries = timeseries.to_a
             @p = p
             @q = q
             ll
@@ -50,7 +50,7 @@ module Statsample
             t = Matrix.zero(m)
             #set_column is available in utility.rb
             t = t.set_column(0, phi)
-            if(m > 1)
+            if m > 1
               t[0...(m-1), 1...m] = Matrix.I(m-1)
               #chances of extra constant 0 values as unbalanced column, so:
               t = Matrix.columns(t.column_vectors)
@@ -66,10 +66,9 @@ module Statsample
 
             n.times do |i|
               v_t[i] = (z * a_t).map { |x| timeseries[i] - x }[0,0]
-
               f_t[i] = (z * p_t * (z.transpose)).map { |x| x + 1 }[0,0]
 
-              k_t = ((t * p_t * z.transpose) + h).map { |x| x / f_t[i] }
+              k_t = ((t * p_t * z.transpose) + h).map { |x| x.quo f_t[i] }
 
               a_t = (t * a_t) + (k_t * v_t[i])
               l_t = t - k_t * z
