@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Statsample::TimeSeries::VERSION
   spec.authors       = ['Ankur Goel', 'Sameer Deshmukh']
   spec.email         = ['sameer.deshmukh93@gmail.com']
-  spec.summary       = %q{}
-  spec.description   = %q{}
+  spec.summary       = %q{statsample-timeseries is a statsample extension which includes many functions for time series analysis.}
+  spec.description   = %q{Various functions for time series analysis.}
   spec.homepage      = ''
   spec.license       = 'BSD-2'
 
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency 'statsample', '2.0.0'
+  spec.add_runtime_dependency 'statsample', '~> 2.0'
   spec.add_runtime_dependency 'daru', '~> 0.1'
 
   spec.add_development_dependency 'bundler', '~> 1.10'
