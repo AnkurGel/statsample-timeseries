@@ -1,8 +1,6 @@
 # statsample-timeseries
 
-{<img
-src="https://secure.travis-ci.org/SciRuby/statsample-timeseries.png"
-/>}[http://travis-ci.org/#!/SciRuby/statsample-timeseries]
+[![Build Status](https://travis-ci.org/SciRuby/statsample-timeseries.png)](https://travis-ci.org/SciRuby/statsample-timeseries)
 
 Statsample-Timeseries is an extension to [Statsample](https://github.com/sciruby/statsample), a suite for advanced statistics with Ruby.
 
@@ -55,7 +53,7 @@ The API doc is [online](http://rubygems.org/gems/statsample-timeseries). For mor
 
 For information on the source tree, documentation, issues and how to contribute, see [http://github.com/SciRuby/statsample-timeseries](git@github.com:SciRuby/statsample-timeseries.git).
 
-== Copyright
+## Copyright
 
 Copyright (c) 2013 Ankur Goel and the Ruby Science Foundation. See LICENSE.txt for further details.
 
